@@ -1,5 +1,7 @@
 package logic;
 
+import java.util.LinkedList;
+
 import data.AnuncianteData;
 import entities.Anunciante;
 
@@ -25,6 +27,10 @@ public class AnuncianteController {
 	
 	public void add(Anunciante anun) {
 		ad.add(anun);
+	}
+	
+	public LinkedList<Anunciante> getAll(){
+		return ad.getAll();
 	}
 	
 }

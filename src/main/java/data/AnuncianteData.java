@@ -1,10 +1,44 @@
 package data;
 
 import java.sql.*;
+import java.util.LinkedList;
 
 import entities.Anunciante;
 
 public class AnuncianteData {
+	
+	public LinkedList<Anunciante> getAll(){
+		Statement stmt = null;
+		ResultSet rs = null;
+		LinkedList<Anunciante> anunciantes = new LinkedList<>();
+		try {
+			stmt = DbConnector.getInstancia().getConn().createStatement();
+			rs = stmt.executeQuery("SELECT * FROM anunciantes");
+			if(rs != null) {
+				while(rs.next()) {
+					Anunciante anun = new Anunciante();
+					anun.setIdAnunciante(rs.getInt("id_anunciante"));
+					anun.setNombre(rs.getString("nombre"));
+					anun.setEmail(rs.getString("email"));
+					anun.setTelefono(rs.getString("telefono"));
+					anun.setUsuario(rs.getString("usuario"));
+					anun.setContrasena(rs.getString("contrasena"));
+					anunciantes.add(anun);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) {rs.close();}
+				if(stmt != null) {stmt.close();}
+				DbConnector.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return anunciantes;
+	}
 	
 	public Anunciante getByNombre(Anunciante anun) {
 		Anunciante a = null;
