@@ -1,7 +1,8 @@
-<%@page import="entities.Propiedad" %>
+<%@page import="entities.Anunciante" %>
 <%@page import="entities.Cliente" %>
+<%@page import="entities.Propiedad" %>
 <%@page import="java.util.LinkedList" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!doctype html>
 <html lang="es">
@@ -13,7 +14,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
     <link rel="stylesheet" type="text/css" href="styles.css">
     <%
-    Cliente cli=(Cliente) session.getAttribute("usuario");
+    Cliente cli = (Cliente) session.getAttribute("usuario");
     LinkedList<Propiedad> lp = (LinkedList<Propiedad>)request.getAttribute("listaPropiedades");
     %>
 </head>
@@ -23,7 +24,7 @@
         <div class="container">
             <div class="row mb-4">
                 <div class="col">
-                    <table class="table text-center table-bordered table-hover">
+                    <table class="table text-center table-hover">
                         <thead>
                             <tr>
                                 <th scope="col">Anunciante</th>
@@ -31,32 +32,41 @@
                                 <th scope="col">Direccion</th>
                                 <th scope="col">Piso</th>
                                 <th scope="col">Departamento</th>
+                                <th scope="col">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
                             <% if (lp.isEmpty()) { %>
                                 <tr>
-                                    <td colspan="5" style="text-align: center;">
-                                        Error al cargar las Propiedades
+                                    <td colspan="6" style="text-align: center;">
+                                        No hay propiedades disponibles
                                     </td>
                                 </tr>
                             <% } else { %>
                                 <% for (Propiedad prop : lp) { %>
                                     <tr>
                                         <td>
-                                            <%=prop.getAnunciante().getNombre()%>
+                                            <%= prop.getAnunciante().getNombre() %>
                                         </td>
                                         <td>
-                                            <%=prop.getNroPropiedad()%>
+                                            <%= prop.getNroPropiedad() %>
                                         </td>
                                         <td>
-                                            <%=prop.getDireccion()%>
+                                            <%= prop.getDireccion() %>
                                         </td>
                                         <td>
                                             <%= prop.getPiso() != 0 ? prop.getPiso() : "-" %>
                                         </td>
                                         <td>
                                             <%= prop.getDepto() != null ? prop.getDepto() : "-" %>
+                                        </td>
+                                        <td>
+                                            <form method="POST" action="alquilerservlet">
+                                                <input type="hidden" name="dni-cliente" value="<%= cli.getDni() %>"></input>
+                                                <input type="hidden" name="nro-propiedad" value="<%= prop.getNroPropiedad() %>"></input>
+                                                <input type="hidden" name="id-anunciante" value="<%= prop.getAnunciante().getIdAnunciante() %>"></input>
+                                                <button class="btn btn-success">Solicitar visita</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <% } %>

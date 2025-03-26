@@ -8,13 +8,17 @@ import entities.Propiedad;
 public class PropiedadController {
 
 	private PropiedadData pd;
-	
+
 	public PropiedadController() {
 		pd = new PropiedadData();
 	}
-	
+
 	public LinkedList<Propiedad> getPropiedadesDisponibles() {
 		return pd.getPropiedadesDisponibles();
 	}
-	
+
+	public Propiedad getByNroId(Propiedad prop) {
+		return pd.getByNroId(prop);
+	}
+
 }
