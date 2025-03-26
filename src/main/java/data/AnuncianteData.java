@@ -86,7 +86,6 @@ public class AnuncianteData {
 
 	public void add(Anunciante anun) {
 		PreparedStatement stmt = null;
-		ResultSet rs = null;
 		try {
 			stmt = DbConnector.getInstancia().getConn().prepareStatement(
 					"INSERT INTO anunciantes (nombre, email, telefono, usuario, contrasena) VALUES (?, ?, ?, ?, ?)");
@@ -100,9 +99,6 @@ public class AnuncianteData {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (rs != null) {
-					rs.close();
-				}
 				if (stmt != null) {
 					stmt.close();
 				}

@@ -1,13 +1,13 @@
 package entities;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class Cliente {
 	
 	private String dni;
 	private String nombre;
 	private String apellido;
-	private Date fecha_nac;
+	private LocalDate fecha_nac;
 	private String email;
 	private String telefono;
 	private String contrasena;
@@ -36,11 +36,11 @@ public class Cliente {
 		this.apellido = apellido;
 	}
 	
-	public Date getFechaNac() {
+	public LocalDate getFechaNac() {
 		return fecha_nac;
 	}
 	
-	public void setFechaNac(Date fecha_nac) {
+	public void setFechaNac(LocalDate fecha_nac) {
 		this.fecha_nac = fecha_nac;
 	}
 	

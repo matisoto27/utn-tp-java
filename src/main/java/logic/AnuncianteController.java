@@ -13,6 +13,10 @@ public class AnuncianteController {
 		ad = new AnuncianteData();
 	}
 
+	public LinkedList<Anunciante> getAll() {
+		return ad.getAll();
+	}
+
 	public Anunciante getById(Anunciante anun) {
 		String query = "SELECT * FROM anunciantes WHERE id_anunciante = ?";
 		return ad.getByQuery(query, anun.getIdAnunciante());
@@ -35,10 +39,6 @@ public class AnuncianteController {
 
 	public void add(Anunciante anun) {
 		ad.add(anun);
-	}
-
-	public LinkedList<Anunciante> getAll() {
-		return ad.getAll();
 	}
 
 }
