@@ -52,3 +52,11 @@ body {
 .list-group a:nth-child(3):hover {
     background-color: lightgrey;
 }
+
+.table>thead {
+    vertical-align: middle;
+}
+
+.table>tbody {
+    vertical-align: middle;
+}
