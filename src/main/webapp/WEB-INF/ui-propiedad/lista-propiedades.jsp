@@ -1,7 +1,7 @@
-<%@page import="entities.Anunciante" %>
-<%@page import="entities.Cliente" %>
-<%@page import="entities.Propiedad" %>
+<%@page import="entities.*" %>
 <%@page import="java.util.LinkedList" %>
+<%@page import="logic.AlquilerController" %>
+<%@page import="logic.PrecioController" %>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!doctype html>
@@ -16,6 +16,8 @@
     <%
     Cliente cli = (Cliente) session.getAttribute("usuario");
     LinkedList<Propiedad> lp = (LinkedList<Propiedad>)request.getAttribute("listaPropiedades");
+    AlquilerController ac = new AlquilerController();
+    PrecioController pc = new PrecioController();
     %>
 </head>
 
@@ -32,6 +34,7 @@
                                 <th scope="col">Direccion</th>
                                 <th scope="col">Piso</th>
                                 <th scope="col">Departamento</th>
+                                <th scope="col">Precio</th>
                                 <th scope="col">Acción</th>
                             </tr>
                         </thead>
@@ -42,8 +45,10 @@
                                         No hay propiedades disponibles
                                     </td>
                                 </tr>
-                            <% } else { %>
-                                <% for (Propiedad prop : lp) { %>
+                            <%
+                            } else {
+                            	for (Propiedad prop : lp) {
+                           	%>
                                     <tr>
                                         <td>
                                             <%= prop.getAnunciante().getNombre() %>
@@ -61,12 +66,28 @@
                                             <%= prop.getDepto() != null ? prop.getDepto() : "-" %>
                                         </td>
                                         <td>
-                                            <form method="POST" action="alquilerservlet">
-                                                <input type="hidden" name="dni-cliente" value="<%= cli.getDni() %>"></input>
-                                                <input type="hidden" name="nro-propiedad" value="<%= prop.getNroPropiedad() %>"></input>
-                                                <input type="hidden" name="id-anunciante" value="<%= prop.getAnunciante().getIdAnunciante() %>"></input>
-                                                <button class="btn btn-success">Solicitar visita</button>
-                                            </form>
+                                            <%= pc.getUltimoByPropiedad(prop) != 0 ? pc.getUltimoByPropiedad(prop) : "Sin datos" %>
+                                        </td>
+                                        <td>
+                                        	<%
+                                        		Alquiler alq = new Alquiler();
+                                        		alq.setPropiedad(prop);
+                                        		alq = ac.getUltimoByPropiedad(alq);
+                                        		if (alq == null) {
+                                        	%>
+                                        			<form method="POST" action="alquilerservlet">
+                                                		<input type="hidden" name="dni-cliente" value="<%= cli.getDni() %>"></input>
+                                                		<input type="hidden" name="nro-propiedad" value="<%= prop.getNroPropiedad() %>"></input>
+                                                		<input type="hidden" name="id-anunciante" value="<%= prop.getAnunciante().getIdAnunciante() %>"></input>
+                                                		<button class="btn btn-success">Solicitar visita</button>
+                                            		</form>
+                                        	<%
+                                        		} else {
+                                        	%>
+                                        			<button class="btn btn-secondary disabled">Reservado</button>
+                                            <%
+                                        		}
+                                        	%>
                                         </td>
                                     </tr>
                                 <% } %>

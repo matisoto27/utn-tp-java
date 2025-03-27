@@ -145,6 +145,77 @@ public class AlquilerData {
 		return a;
 	}
 
+	public Alquiler getUltimoByPropiedad(Alquiler alq) {
+		Alquiler a = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = DbConnector.getInstancia().getConn()
+					.prepareStatement("SELECT * FROM alquileres alq INNER JOIN clientes cli "
+							+ "ON alq.dni_cliente = cli.dni INNER JOIN propiedades prop "
+							+ "ON alq.nro_propiedad = prop.nro_propiedad AND alq.id_anunciante = prop.id_anunciante "
+							+ "INNER JOIN anunciantes anun ON prop.id_anunciante = anun.id_anunciante "
+							+ "WHERE alq.nro_propiedad = ? AND alq.id_anunciante = ? "
+							+ "AND alq.fecha_solicitado = (SELECT MAX(fecha_solicitado) FROM alquileres "
+							+ "WHERE nro_propiedad = ? AND id_anunciante = ?)");
+			stmt.setInt(1, alq.getPropiedad().getNroPropiedad());
+			stmt.setInt(2, alq.getPropiedad().getAnunciante().getIdAnunciante());
+			stmt.setInt(3, alq.getPropiedad().getNroPropiedad());
+			stmt.setInt(4, alq.getPropiedad().getAnunciante().getIdAnunciante());
+			rs = stmt.executeQuery();
+			if (rs != null && rs.next()) {
+				a = new Alquiler();
+
+				a.setIdAlquiler(rs.getInt("id_alquiler"));
+
+				a.setCliente(new Cliente());
+				a.getCliente().setDni(rs.getString("dni"));
+				a.getCliente().setNombre(rs.getString("nombre"));
+				a.getCliente().setApellido(rs.getString("apellido"));
+				a.getCliente().setFechaNac(rs.getObject("fecha_nac", LocalDate.class));
+				a.getCliente().setEmail(rs.getString("email"));
+				a.getCliente().setTelefono(rs.getString("telefono"));
+				a.getCliente().setContrasena(rs.getString("contrasena"));
+
+				a.setPropiedad(new Propiedad());
+				a.getPropiedad().setNroPropiedad(rs.getInt("nro_propiedad"));
+				a.getPropiedad().setAnunciante(new Anunciante());
+				a.getPropiedad().getAnunciante().setIdAnunciante(rs.getInt("id_anunciante"));
+				a.getPropiedad().getAnunciante().setNombre(rs.getString("nombre"));
+				a.getPropiedad().getAnunciante().setEmail(rs.getString("email"));
+				a.getPropiedad().getAnunciante().setTelefono(rs.getString("telefono"));
+				a.getPropiedad().getAnunciante().setUsuario(rs.getString("usuario"));
+				a.getPropiedad().getAnunciante().setContrasena(rs.getString("contrasena"));
+				a.getPropiedad().setDireccion(rs.getString("direccion"));
+				a.getPropiedad().setPiso(rs.getInt("piso"));
+				a.getPropiedad().setDepto(rs.getString("depto"));
+
+				a.setFechaSolicitado(rs.getObject("fecha_solicitado", LocalDate.class));
+				a.setEstado(rs.getString("estado"));
+				a.setFechaInicioContrato(rs.getObject("fecha_inicio_contrato", LocalDate.class));
+				a.setFechaFinContrato(rs.getObject("fecha_fin_contrato", LocalDate.class));
+				a.setFechaRenuncia(rs.getObject("fecha_renuncia", LocalDate.class));
+				a.setPuntuacion(rs.getInt("puntuacion"));
+				a.setComentario(rs.getString("comentario"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				DbConnector.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return a;
+	}
+
 	public void add(Alquiler alq) {
 		String dateFormat = "yyyy-MM-dd";
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern(dateFormat);
