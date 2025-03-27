@@ -3,6 +3,7 @@ package logic;
 import java.util.LinkedList;
 
 import data.PropiedadData;
+import entities.Anunciante;
 import entities.Propiedad;
 
 public class PropiedadController {
@@ -15,6 +16,10 @@ public class PropiedadController {
 
 	public LinkedList<Propiedad> getPropiedadesDisponibles() {
 		return pd.getPropiedadesDisponibles();
+	}
+
+	public LinkedList<Propiedad> getPropiedadesByAnunciante(Anunciante anun) {
+		return pd.getPropiedadesByAnunciante(anun);
 	}
 
 	public Propiedad getByNroId(Propiedad prop) {

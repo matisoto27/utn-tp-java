@@ -23,23 +23,72 @@ public class PropiedadData {
 					+ "WHERE (alq.id_alquiler IS NULL) OR estado != 'Confirmado'");
 			if (rs != null) {
 				while (rs.next()) {
-					Propiedad prop = new Propiedad();
+					Propiedad p = new Propiedad();
 
-					prop.setNroPropiedad(rs.getInt("nro_propiedad"));
+					p.setNroPropiedad(rs.getInt("nro_propiedad"));
 
-					prop.setAnunciante(new Anunciante());
-					prop.getAnunciante().setIdAnunciante(rs.getInt("id_anunciante"));
-					prop.getAnunciante().setNombre(rs.getString("nombre"));
-					prop.getAnunciante().setEmail(rs.getString("email"));
-					prop.getAnunciante().setTelefono(rs.getString("telefono"));
-					prop.getAnunciante().setUsuario(rs.getString("usuario"));
-					prop.getAnunciante().setContrasena(rs.getString("contrasena"));
+					p.setAnunciante(new Anunciante());
+					p.getAnunciante().setIdAnunciante(rs.getInt("id_anunciante"));
+					p.getAnunciante().setNombre(rs.getString("nombre"));
+					p.getAnunciante().setEmail(rs.getString("email"));
+					p.getAnunciante().setTelefono(rs.getString("telefono"));
+					p.getAnunciante().setUsuario(rs.getString("usuario"));
+					p.getAnunciante().setContrasena(rs.getString("contrasena"));
 
-					prop.setDireccion(rs.getString("direccion"));
-					prop.setPiso(rs.getInt("piso"));
-					prop.setDepto(rs.getString("depto"));
+					p.setDireccion(rs.getString("direccion"));
+					p.setPiso(rs.getInt("piso"));
+					p.setDepto(rs.getString("depto"));
 
-					propiedades.add(prop);
+					propiedades.add(p);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				DbConnector.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return propiedades;
+	}
+
+	public LinkedList<Propiedad> getPropiedadesByAnunciante(Anunciante anun) {
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		LinkedList<Propiedad> propiedades = new LinkedList<>();
+		try {
+			stmt = DbConnector.getInstancia().getConn().prepareStatement(
+					"SELECT * FROM propiedades prop INNER JOIN anunciantes anun ON prop.id_anunciante = anun.id_anunciante "
+							+ "WHERE prop.id_anunciante = ?");
+			stmt.setInt(1, anun.getIdAnunciante());
+			rs = stmt.executeQuery();
+			if (rs != null) {
+				while (rs.next()) {
+					Propiedad p = new Propiedad();
+
+					p.setNroPropiedad(rs.getInt("nro_propiedad"));
+
+					p.setAnunciante(new Anunciante());
+					p.getAnunciante().setIdAnunciante(rs.getInt("id_anunciante"));
+					p.getAnunciante().setNombre(rs.getString("nombre"));
+					p.getAnunciante().setEmail(rs.getString("email"));
+					p.getAnunciante().setTelefono(rs.getString("telefono"));
+					p.getAnunciante().setUsuario(rs.getString("usuario"));
+					p.getAnunciante().setContrasena(rs.getString("contrasena"));
+
+					p.setDireccion(rs.getString("direccion"));
+					p.setPiso(rs.getInt("piso"));
+					p.setDepto(rs.getString("depto"));
+
+					propiedades.add(p);
 				}
 			}
 		} catch (SQLException e) {

@@ -11,13 +11,13 @@
     <title>Listado de Propiedades</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="styles.css">
     <%
-    Cliente cli = (Cliente) session.getAttribute("usuario");
-    LinkedList<Propiedad> lp = (LinkedList<Propiedad>)request.getAttribute("listaPropiedades");
     AlquilerController ac = new AlquilerController();
     PrecioController pc = new PrecioController();
+    Cliente cli = (Cliente) session.getAttribute("usuario");
+    LinkedList<Propiedad> propiedades = (LinkedList<Propiedad>)request.getAttribute("propiedades");
     %>
 </head>
 
@@ -39,7 +39,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% if (lp.isEmpty()) { %>
+                            <%
+                            if (propiedades.isEmpty()) {
+                            %>
                                 <tr>
                                     <td colspan="6" style="text-align: center;">
                                         No hay propiedades disponibles
@@ -47,7 +49,7 @@
                                 </tr>
                             <%
                             } else {
-                            	for (Propiedad prop : lp) {
+                            	for (Propiedad prop : propiedades) {
                            	%>
                                     <tr>
                                         <td>
@@ -73,7 +75,11 @@
                                         		Alquiler alq = new Alquiler();
                                         		alq.setPropiedad(prop);
                                         		alq = ac.getUltimoByPropiedad(alq);
-                                        		if (alq == null) {
+                                        		if (alq != null) {
+                                        	%>
+                                        			<button class="btn btn-secondary disabled">Reservado</button>
+                                        	<%
+                                        		} else {
                                         	%>
                                         			<form method="POST" action="alquilerservlet">
                                                 		<input type="hidden" name="dni-cliente" value="<%= cli.getDni() %>"></input>
@@ -81,17 +87,15 @@
                                                 		<input type="hidden" name="id-anunciante" value="<%= prop.getAnunciante().getIdAnunciante() %>"></input>
                                                 		<button class="btn btn-success">Solicitar visita</button>
                                             		</form>
-                                        	<%
-                                        		} else {
-                                        	%>
-                                        			<button class="btn btn-secondary disabled">Reservado</button>
                                             <%
                                         		}
                                         	%>
                                         </td>
                                     </tr>
-                                <% } %>
-                            <% } %>
+                            	<%
+                           		}
+                         	}
+                           	%>
                         </tbody>
                     </table>
                 </div>
@@ -103,8 +107,8 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
 </body>
 
 </html>
