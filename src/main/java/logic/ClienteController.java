@@ -36,4 +36,8 @@ public class ClienteController {
 		cd.add(cli);
 	}
 
+	public void update(Cliente cli) {
+		cd.update(cli);
+	}
+
 }

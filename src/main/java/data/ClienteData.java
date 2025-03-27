@@ -114,4 +114,30 @@ public class ClienteData {
 		}
 	}
 
+	public void update(Cliente cli) {
+		PreparedStatement stmt = null;
+		try {
+			stmt = DbConnector.getInstancia().getConn().prepareStatement(
+					"UPDATE clientes SET nombre = ?, apellido = ?, fecha_nac = ?, email = ?, telefono = ?, contrasena = ? WHERE dni = ?");
+			stmt.setString(1, cli.getNombre());
+			stmt.setString(2, cli.getApellido());
+			stmt.setObject(3, cli.getFechaNac());
+			stmt.setString(4, cli.getEmail());
+			stmt.setString(5, cli.getTelefono());
+			stmt.setString(6, cli.getContrasena());
+			stmt.setString(7, cli.getDni());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				DbConnector.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 }

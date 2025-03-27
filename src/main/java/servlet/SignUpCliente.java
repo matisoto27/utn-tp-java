@@ -50,23 +50,65 @@ public class SignUpCliente extends HttpServlet {
 		cli.setTelefono(telefono);
 		cli.setContrasena(contrasena);
 
-		StringBuilder errores = new StringBuilder("error=");
+		StringBuilder errores = new StringBuilder();
+
+		Cliente cliAux = new Cliente();
+
+		if (dni.length() != 8 || !dni.matches("[0-9]+")) {
+			errores.append("dni_invalido,");
+		}
 
 		if (!cc.validarDniUnico(cli)) {
 			errores.append("dni_unico,");
+		} else {
+			cliAux.setDni(dni);
+		}
+
+		if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ]+")) {
+			errores.append("nombre_invalido,");
+		} else {
+			cliAux.setNombre(nombre);
+		}
+
+		if (!apellido.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ]+")) {
+			errores.append("apellido_invalido,");
+		} else {
+			cliAux.setApellido(apellido);
+		}
+
+		if (fecha_nac.isAfter(LocalDate.now().minusYears(18))) {
+			errores.append("edad_invalida,");
+		} else {
+			cliAux.setFechaNac(fecha_nac);
+		}
+
+		if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+			errores.append("email_invalido,");
+		} else {
+			cliAux.setEmail(email);
+		}
+
+		if (telefono.length() < 10 || !telefono.matches("[0-9]+")) {
+			errores.append("telefono_invalido,");
+		} else {
+			cliAux.setTelefono(telefono);
+		}
+
+		if (contrasena.length() != 8) {
+			errores.append("contrasena_invalida,");
 		}
 
 		if (!contrasena.equals(contrasena2)) {
 			errores.append("contrasenas_no_coinciden,");
 		}
 
-		if (errores.length() > 6) {
+		if (errores.length() > 0) {
 			errores.deleteCharAt(errores.length() - 1);
-			response.sendRedirect("signup-cliente.html?" + errores.toString());
+			request.setAttribute("respuestas", cliAux);
+		    request.setAttribute("errores", errores.toString());
+		    request.getRequestDispatcher("signup-cliente.jsp").forward(request, response);
 			return;
 		}
-
-		// Falta manejar errores del lado del html
 
 		cc.add(cli);
 		response.sendRedirect("index.html");
