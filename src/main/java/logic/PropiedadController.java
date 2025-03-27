@@ -26,4 +26,8 @@ public class PropiedadController {
 		return pd.getByNroId(prop);
 	}
 
+	public void add(Propiedad prop) {
+		pd.add(prop);
+	}
+
 }

@@ -253,7 +253,7 @@ public class AlquilerData {
 		PreparedStatement stmt = null;
 		try {
 			stmt = DbConnector.getInstancia().getConn()
-					.prepareStatement("UPDATE alquileres SET estado = ? WHERE id_alquiler = ?");
+					.prepareStatement("UPDATE alquileres SET estado = ?, fecha_inicio_contrato = ?, fecha_fin_contrato = ? WHERE id_alquiler = ?");
 			stmt.setString(1, alq.getEstado());
 			stmt.setInt(2, alq.getIdAlquiler());
 			stmt.executeUpdate();

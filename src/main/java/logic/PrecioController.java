@@ -18,8 +18,12 @@ public class PrecioController {
 		return pd.getAll();
 	}
 
-	public double getUltimoByPropiedad(Propiedad prop) {
+	public Precio getUltimoByPropiedad(Propiedad prop) {
 		return pd.getUltimoByPropiedad(prop);
+	}
+
+	public void add(Precio p) {
+		pd.add(p);
 	}
 
 }
