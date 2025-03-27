@@ -28,29 +28,20 @@ body {
     color: white;
 }
 
-.list-group a:nth-child(1) {
+.list-group a:nth-child(odd) {
     background-color: crimson;
 }
 
-.list-group a:nth-child(2) {
+.list-group a:nth-child(even) {
     background-color: #0866ff;
 }
 
-.list-group a:nth-child(3) {
-    background-color: white;
-    color: black;
-}
-
-.list-group a:nth-child(1):hover {
+.list-group a:nth-child(odd):hover {
     background-color: #9E1B32;
 }
 
-.list-group a:nth-child(2):hover {
+.list-group a:nth-child(even):hover {
     background-color: deepskyblue;
-}
-
-.list-group a:nth-child(3):hover {
-    background-color: lightgrey;
 }
 
 .table>thead {

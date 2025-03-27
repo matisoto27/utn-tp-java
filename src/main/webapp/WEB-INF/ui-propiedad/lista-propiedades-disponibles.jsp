@@ -50,6 +50,8 @@
                             <%
                             } else {
                             	for (Propiedad prop : propiedades) {
+                            		Precio p = new Precio();
+                            		p = pc.getUltimoByPropiedad(prop);
                            	%>
                                     <tr>
                                         <td>
@@ -68,7 +70,7 @@
                                             <%= prop.getDepto() != null ? prop.getDepto() : "-" %>
                                         </td>
                                         <td>
-                                            <%= pc.getUltimoByPropiedad(prop) != 0 ? pc.getUltimoByPropiedad(prop) : "Sin datos" %>
+                                            <%= p != null ? p.getValor() : "Sin datos" %>
                                         </td>
                                         <td>
                                         	<%

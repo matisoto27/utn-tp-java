@@ -67,7 +67,7 @@
                                             <%= prop.getDepto() != null ? prop.getDepto() : "-" %>
                                         </td>
                                         <td>
-                                            <%= p != null ? p.getValor() : "Error al cargar" %>
+                                            <%= p != null ? p.getValor() : "Sin datos" %>
                                         </td>
                                         <%
                                         Alquiler alq = new Alquiler();
