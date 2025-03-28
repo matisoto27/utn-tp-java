@@ -21,13 +21,14 @@
                     <select class="form-select" name="tipo" id="tipo">
                         <option value="cliente">Soy Cliente</option>
                         <option value="anunciante">Soy Anunciante</option>
+                        <option value="administrador">Soy Administrador</option>
                     </select>
                 </div>
                 <div class="mb-3" id="campo-cliente">
                     <label for="dni" class="form-label">DNI</label>
                     <input type="text" class="form-control" name="dni" id="dni">
                 </div>
-                <div class="mb-3" id="campo-anunciante" style="display: none;">
+                <div class="mb-3" id="campo-anunciante-adm" style="display: none;">
                     <label for="usuario" class="form-label">Usuario</label>
                     <input type="text" class="form-control" name="usuario" id="usuario">
                 </div>
@@ -52,7 +53,7 @@
         document.getElementById('tipo').addEventListener('change', function () {
             const tipoSeleccionado = this.value;
             const campoCliente = document.getElementById('campo-cliente');
-            const campoAnunciante = document.getElementById('campo-anunciante');
+            const campoAnunciante = document.getElementById('campo-anunciante-adm');
             if (tipoSeleccionado === 'cliente') {
                 campoCliente.style.display = 'block';
                 campoAnunciante.style.display = 'none';

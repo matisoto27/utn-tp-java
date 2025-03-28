@@ -44,6 +44,14 @@ body {
     background-color: deepskyblue;
 }
 
+.crud-table {
+    overflow-y: auto;
+}
+
+.crud-table-anun {
+    max-height: 757px;
+}
+
 .table>thead {
     vertical-align: middle;
 }

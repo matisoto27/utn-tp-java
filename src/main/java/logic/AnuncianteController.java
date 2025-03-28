@@ -41,4 +41,12 @@ public class AnuncianteController {
 		ad.add(anun);
 	}
 
+	public void update(Anunciante anun) {
+		ad.update(anun);
+	}
+
+	public void delete(Anunciante anun) {
+		ad.delete(anun);
+	}
+
 }

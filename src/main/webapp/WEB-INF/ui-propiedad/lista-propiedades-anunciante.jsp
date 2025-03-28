@@ -50,7 +50,10 @@
                             <%
                             } else {
                             	for (Propiedad prop : propiedades) {
+                            		Alquiler alq = new Alquiler();
                             		Precio p = new Precio();
+                            		alq.setPropiedad(prop);
+                            		alq = ac.getUltimoByPropiedad(alq);
                             		p = pc.getUltimoByPropiedad(prop);
                            	%>
                                     <tr>
@@ -70,9 +73,6 @@
                                             <%= p != null ? p.getValor() : "Sin datos" %>
                                         </td>
                                         <%
-                                        Alquiler alq = new Alquiler();
-                                    	alq.setPropiedad(prop);
-                                    	alq = ac.getUltimoByPropiedad(alq);
                                     	if (alq != null) {
                                     	%>
                                     		<td>

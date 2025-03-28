@@ -2,19 +2,11 @@ package entities;
 
 public class Propiedad {
 
-	private int nro_propiedad;
 	private Anunciante anunciante;
+	private int nro_propiedad;
 	private String direccion;
 	private int piso;
 	private String depto;
-
-	public int getNroPropiedad() {
-		return nro_propiedad;
-	}
-
-	public void setNroPropiedad(int nro_propiedad) {
-		this.nro_propiedad = nro_propiedad;
-	}
 
 	public Anunciante getAnunciante() {
 		return anunciante;
@@ -22,6 +14,14 @@ public class Propiedad {
 
 	public void setAnunciante(Anunciante anunciante) {
 		this.anunciante = anunciante;
+	}
+
+	public int getNroPropiedad() {
+		return nro_propiedad;
+	}
+
+	public void setNroPropiedad(int nro_propiedad) {
+		this.nro_propiedad = nro_propiedad;
 	}
 
 	public String getDireccion() {

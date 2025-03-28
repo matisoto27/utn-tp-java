@@ -109,4 +109,49 @@ public class AnuncianteData {
 		}
 	}
 
+	public void update(Anunciante anun) {
+		PreparedStatement stmt = null;
+		try {
+			stmt = DbConnector.getInstancia().getConn().prepareStatement(
+					"UPDATE anunciantes SET nombre = ?, email = ?, telefono = ?, usuario = ?, contrasena = ? WHERE id_anunciante = ?");
+			stmt.setString(1, anun.getNombre());
+			stmt.setString(2, anun.getEmail());
+			stmt.setString(3, anun.getTelefono());
+			stmt.setString(4, anun.getUsuario());
+			stmt.setString(5, anun.getContrasena());
+			stmt.setInt(6, anun.getIdAnunciante());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				DbConnector.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void delete(Anunciante anun) {
+		PreparedStatement stmt = null;
+		try {
+			stmt = DbConnector.getInstancia().getConn()
+					.prepareStatement("DELETE FROM anunciantes WHERE id_anunciante = ?");
+			stmt.setInt(1, anun.getIdAnunciante());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				DbConnector.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 }
