@@ -52,6 +52,10 @@ body {
     max-height: 757px;
 }
 
+.crud-table-cli {
+    max-height: 836px;
+}
+
 .table>thead {
     vertical-align: middle;
 }

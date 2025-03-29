@@ -40,4 +40,8 @@ public class ClienteController {
 		cd.update(cli);
 	}
 
+	public void delete(Cliente cli) {
+		cd.delete(cli);
+	}
+
 }
