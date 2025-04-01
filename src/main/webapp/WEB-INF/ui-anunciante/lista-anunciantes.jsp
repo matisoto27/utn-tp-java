@@ -13,8 +13,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="styles.css">
     <%
-    Cliente cli=(Cliente) session.getAttribute("usuario");
-    LinkedList<Anunciante> la = (LinkedList<Anunciante>)request.getAttribute("listaAnunciantes");
+    Cliente cli = (Cliente) session.getAttribute("usuario");
+    LinkedList<Anunciante> anunciantes = (LinkedList<Anunciante>)request.getAttribute("anunciantes");
     %>
 </head>
 
@@ -32,7 +32,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% for (Anunciante anun : la) { %>
+                            <% for (Anunciante anun : anunciantes) { %>
                                 <tr>
                                     <td>
                                         <%=anun.getNombre()%>

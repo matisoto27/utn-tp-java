@@ -7,6 +7,8 @@ public class Propiedad {
 	private String direccion;
 	private int piso;
 	private String depto;
+	private Double precio_actual;
+	private String estado;
 
 	public Anunciante getAnunciante() {
 		return anunciante;
@@ -46,6 +48,22 @@ public class Propiedad {
 
 	public void setDepto(String depto) {
 		this.depto = depto;
+	}
+
+	public Double getPrecioActual() {
+		return precio_actual;
+	}
+
+	public void setPrecioActual(Double precio_actual) {
+		this.precio_actual = precio_actual;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
 	}
 
 }

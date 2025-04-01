@@ -1,7 +1,5 @@
 <%@page import="entities.*" %>
 <%@page import="java.util.LinkedList" %>
-<%@page import="logic.AlquilerController" %>
-<%@page import="logic.PrecioController" %>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!doctype html>
@@ -14,10 +12,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="styles.css">
     <%
-    AlquilerController ac = new AlquilerController();
-    PrecioController pc = new PrecioController();
-    Cliente cli = (Cliente) session.getAttribute("usuario");
-    LinkedList<Propiedad> propiedades = (LinkedList<Propiedad>)request.getAttribute("propiedades");
+    Cliente cli = (Cliente) request.getAttribute("cliente");
+    LinkedList<Propiedad> propiedades = (LinkedList<Propiedad>) request.getAttribute("propiedades");
     %>
 </head>
 
@@ -43,15 +39,13 @@
                             if (propiedades.isEmpty()) {
                             %>
                                 <tr>
-                                    <td colspan="6" style="text-align: center;">
+                                    <td colspan="7" style="text-align: center;">
                                         No hay propiedades disponibles
                                     </td>
                                 </tr>
                             <%
                             } else {
                             	for (Propiedad prop : propiedades) {
-                            		Precio p = new Precio();
-                            		p = pc.getUltimoByPropiedad(prop);
                            	%>
                                     <tr>
                                         <td>
@@ -70,14 +64,11 @@
                                             <%= prop.getDepto() != null ? prop.getDepto() : "-" %>
                                         </td>
                                         <td>
-                                            <%= p != null ? p.getValor() : "Sin datos" %>
+                                            <%= prop.getPrecioActual() != 0 ? prop.getPrecioActual() : "Sin datos" %>
                                         </td>
                                         <td>
                                         	<%
-                                        		Alquiler alq = new Alquiler();
-                                        		alq.setPropiedad(prop);
-                                        		alq = ac.getUltimoByPropiedad(alq);
-                                        		if (alq != null) {
+                                        		if (prop.getEstado() != null && prop.getEstado().equals("Pendiente")) {
                                         	%>
                                         			<button class="btn btn-secondary disabled">Reservado</button>
                                         	<%

@@ -6,13 +6,13 @@
 <html lang="es">
 
 <head>
-    <title>Mis Propiedades</title>
+    <title>Alquileres en curso</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="styles.css">
     <%
-    LinkedList<Propiedad> propiedades = (LinkedList<Propiedad>) request.getAttribute("propiedades");
+    LinkedList<Alquiler> alquileres = (LinkedList<Alquiler>) request.getAttribute("alquileres");
     %>
 </head>
 
@@ -24,63 +24,57 @@
                     <table class="table text-center table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">Nro. de Propiedad</th>
+                                <th scope="col">Cliente</th>
                                 <th scope="col">Direccion</th>
-                                <th scope="col">Piso</th>
-                                <th scope="col">Departamento</th>
-                                <th scope="col">Precio Actual</th>
-                                <th scope="col">Estado</th>
+                                <th scope="col">Fecha Solicitado</th>
+                                <th scope="col">Fecha Inicio Contrato</th>
+                                <th scope="col">Fecha Fin Contrato</th>
+                                <th scope="col">Precio</th>
                             </tr>
                         </thead>
                         <tbody>
-            			<%
-                            if (propiedades.isEmpty()) {
-                     	%>
+                            <%
+                            if (alquileres.isEmpty()) {
+                            %>
                                 <tr>
                                     <td colspan="8" style="text-align: center;">
-                                        Todavía no has registrado ninguna propiedad
+                                        No existe ningún alquiler en curso
                                     </td>
                                 </tr>
-                      	<%
+                            <%
                             } else {
-                            	for (Propiedad prop : propiedades) {
-                   		%>
+                            	for (Alquiler alq : alquileres) {
+                                    String cliente = alq.getCliente().getApellido() + " " + alq.getCliente().getNombre();
+                                    String direccion = alq.getPropiedad().getPiso() == 0 ? alq.getPropiedad().getDireccion() : alq.getPropiedad().getDireccion() + " " + alq.getPropiedad().getPiso() + alq.getPropiedad().getDepto();
+                                    String fecha_solicitado = alq.getFechaSolicitado().toString();
+                                    String fecha_inicio_contrato = alq.getFechaInicioContrato().toString();
+                                    String fecha_fin_contrato = alq.getFechaFinContrato().toString();
+                                    Double precio = alq.getPrecio();
+                           	%>
                                     <tr>
                                         <td>
-                                            <%= prop.getNroPropiedad() %>
+                                            <%= cliente %>
                                         </td>
                                         <td>
-                                            <%= prop.getDireccion() %>
+                                            <%= direccion %>
                                         </td>
                                         <td>
-                                            <%= prop.getPiso() != 0 ? prop.getPiso() : "-" %>
+                                            <%= fecha_solicitado %>
                                         </td>
                                         <td>
-                                            <%= prop.getDepto() != null ? prop.getDepto() : "-" %>
+                                            <%= fecha_inicio_contrato %>
                                         </td>
                                         <td>
-                                            <%= prop.getPrecioActual() != 0 ? prop.getPrecioActual() : "Sin datos" %>
+                                            <%= fecha_fin_contrato %>
                                         </td>
-                                  	<%
-                                    	if (prop.getEstado() != null && prop.getEstado().equals("Confirmado")) {
-                                   	%>
-                                    		<td>Alquilada</td>
-                                  	<%
-                                    	} else if (prop.getEstado() != null && prop.getEstado().equals("Pendiente")) {
-                                  	%>
-                                    		<td>Pendiente</td>
-                                 	<%
-                                   		} else {
-                                	%>
-                                        	<td>Disponible</td>
-                                	<%
-                                   		}
-                               		%>
+                                        <td>
+                                            <%= precio %>
+                                        </td>
                                     </tr>
-                    	<%
-                          		}
-                     		}
-                    	%>
+                             	<%
+                                }
+                           	}
+                         	%>
                         </tbody>
                     </table>
                 </div>
