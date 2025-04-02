@@ -5,7 +5,7 @@ public class Propiedad {
 	private Anunciante anunciante;
 	private int nro_propiedad;
 	private String direccion;
-	private int piso;
+	private Integer piso;
 	private String depto;
 	private Double precio_actual;
 	private String estado;
@@ -34,11 +34,11 @@ public class Propiedad {
 		this.direccion = direccion;
 	}
 
-	public int getPiso() {
+	public Integer getPiso() {
 		return piso;
 	}
 
-	public void setPiso(int piso) {
+	public void setPiso(Integer piso) {
 		this.piso = piso;
 	}
 

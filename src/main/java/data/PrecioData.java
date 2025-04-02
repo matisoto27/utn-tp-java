@@ -125,8 +125,7 @@ public class PrecioData {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = DbConnector.getInstancia().getConn().prepareStatement(
-					"INSERT INTO precios (id_anunciante, nro_propiedad, fecha_desde, valor) VALUES (?, ?, ?, ?)");
+			stmt = DbConnector.getInstancia().getConn().prepareStatement("INSERT INTO precios (id_anunciante, nro_propiedad, fecha_desde, valor) VALUES (?, ?, ?, ?)");
 			stmt.setInt(1, p.getPropiedad().getAnunciante().getIdAnunciante());
 			stmt.setInt(2, p.getPropiedad().getNroPropiedad());
 			stmt.setObject(3, fechaActual.format(dtf));
@@ -148,5 +147,26 @@ public class PrecioData {
 			}
 		}
 	}
-
+	
+	public void deleteByPropiedad(Propiedad p) {
+		PreparedStatement stmt = null;
+		try {
+			stmt = DbConnector.getInstancia().getConn().prepareStatement("DELETE FROM precios WHERE id_anunciante = ? AND nro_propiedad = ?");
+			stmt.setInt(1, p.getAnunciante().getIdAnunciante());
+			stmt.setInt(2, p.getNroPropiedad());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+				DbConnector.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }

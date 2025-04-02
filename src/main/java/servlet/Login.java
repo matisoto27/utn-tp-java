@@ -47,6 +47,7 @@ public class Login extends HttpServlet {
 
 			if (cli != null) {
 				request.getSession().setAttribute("usuario", cli);
+				request.getSession().setAttribute("rol", "cliente");
 				response.sendRedirect("menu-cliente.html");
 			} else {
 				// Manejar error cliente no existe
@@ -64,7 +65,8 @@ public class Login extends HttpServlet {
 
 			if (anun != null) {
 				request.getSession().setAttribute("usuario", anun);
-				response.sendRedirect("menu-anunciante.html");
+				request.getSession().setAttribute("rol", "anunciante");
+				request.getRequestDispatcher("WEB-INF/menu-anunciante.jsp").forward(request, response);
 			} else {
 				// Manejar error anunciante no existe
 			}
@@ -81,6 +83,7 @@ public class Login extends HttpServlet {
 
 			if (adm != null) {
 				request.getSession().setAttribute("usuario", adm);
+				request.getSession().setAttribute("rol", "administrador");
 				response.sendRedirect("menu-administrador.html");
 			} else {
 				// Manejar error anunciante no existe

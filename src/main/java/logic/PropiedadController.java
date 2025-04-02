@@ -22,12 +22,20 @@ public class PropiedadController {
 		return pd.getPropiedadesByAnunciante(anun);
 	}
 
-	public Propiedad getByNroId(Propiedad prop) {
-		return pd.getByNroId(prop);
+	public Propiedad getByIdAnunNroProp(Propiedad prop) {
+		return pd.getByIdAnunNroProp(prop);
 	}
 
 	public void add(Propiedad prop) {
 		pd.add(prop);
+	}
+
+	public void update(Propiedad prop) {
+		pd.update(prop);
+	}
+
+	public void delete(Propiedad prop) {
+		pd.delete(prop);
 	}
 
 }

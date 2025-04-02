@@ -20,68 +20,77 @@ public class AnuncianteServlet extends HttpServlet {
 		super();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		Anunciante anun = new Anunciante();
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		LinkedList<Anunciante> anunciantes = new LinkedList<>();
 		AnuncianteController ac = new AnuncianteController();
+		String rol = (String) request.getSession().getAttribute("rol");
 		String action = request.getParameter("action");
 		if (action != null) {
 			switch (action) {
-			case "delete": {
-				int id_anunciante = Integer.parseInt(request.getParameter("id"));
-				anun.setIdAnunciante(id_anunciante);
-				ac.delete(anun);
-				break;
-			}
+			
+				case "retrieve": {
+					if (rol.equals("administrador")) {
+						anunciantes = ac.getAll();
+						request.setAttribute("anunciantes", anunciantes);
+						request.getRequestDispatcher("WEB-INF/ui-anunciante/crud-anunciante.jsp").forward(request, response);
+					} else {
+						// Acceso no autorizado
+					}
+					break;
+				}
+				
 			}
 		}
-		LinkedList<Anunciante> anunciantes = ac.getAll();
-		request.setAttribute("anunciantes", anunciantes);
-		request.getRequestDispatcher("WEB-INF/ui-anunciante/crud-anunciante.jsp").forward(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Anunciante anun = new Anunciante();
 		AnuncianteController ac = new AnuncianteController();
 		String action = request.getParameter("action");
 		if (action != null) {
 			switch (action) {
-			case "create": {
-				String nombre = request.getParameter("nombre");
-				String email = request.getParameter("email");
-				String telefono = request.getParameter("telefono");
-				String usuario = request.getParameter("usuario");
-				String contrasena = request.getParameter("contrasena");
-				anun.setNombre(nombre);
-				anun.setEmail(email);
-				anun.setTelefono(telefono);
-				anun.setUsuario(usuario);
-				anun.setContrasena(contrasena);
-				ac.add(anun);
-				break;
-			}
-			case "update": {
-				int id_anunciante = Integer.parseInt(request.getParameter("id-anunciante"));
-				String nombre = request.getParameter("nombre");
-				String email = request.getParameter("email");
-				String telefono = request.getParameter("telefono");
-				String usuario = request.getParameter("usuario");
-				String contrasena = request.getParameter("contrasena");
-				anun.setIdAnunciante(id_anunciante);
-				anun.setNombre(nombre);
-				anun.setEmail(email);
-				anun.setTelefono(telefono);
-				anun.setUsuario(usuario);
-				anun.setContrasena(contrasena);
-				ac.update(anun);
-				break;
-			}
+				
+				case "create": {
+					String nombre = request.getParameter("nombre");
+					String email = request.getParameter("email");
+					String telefono = request.getParameter("telefono");
+					String usuario = request.getParameter("usuario");
+					String contrasena = request.getParameter("contrasena");
+					anun.setNombre(nombre);
+					anun.setEmail(email);
+					anun.setTelefono(telefono);
+					anun.setUsuario(usuario);
+					anun.setContrasena(contrasena);
+					ac.add(anun);
+					break;
+				}
+			
+				case "update": {
+					int id_anunciante = Integer.parseInt(request.getParameter("id-anunciante"));
+					String nombre = request.getParameter("nombre");
+					String email = request.getParameter("email");
+					String telefono = request.getParameter("telefono");
+					String usuario = request.getParameter("usuario");
+					String contrasena = request.getParameter("contrasena");
+					anun.setIdAnunciante(id_anunciante);
+					anun.setNombre(nombre);
+					anun.setEmail(email);
+					anun.setTelefono(telefono);
+					anun.setUsuario(usuario);
+					anun.setContrasena(contrasena);
+					ac.update(anun);
+					break;
+				}
+			
+				case "delete": {
+					int id_anunciante = Integer.parseInt(request.getParameter("id"));
+					anun.setIdAnunciante(id_anunciante);
+					ac.delete(anun);
+					break;
+				}
 			}
 		}
-		LinkedList<Anunciante> anunciantes = ac.getAll();
-		request.setAttribute("anunciantes", anunciantes);
-		request.getRequestDispatcher("WEB-INF/ui-anunciante/crud-anunciante.jsp").forward(request, response);
+		response.sendRedirect("anuncianteservlet?action=retrieve");
 	}
 
 }

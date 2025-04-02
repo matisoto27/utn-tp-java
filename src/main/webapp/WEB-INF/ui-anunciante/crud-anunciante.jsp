@@ -81,7 +81,12 @@
                                         <td><%= email %></td>
                                         <td><%= telefono %></td>
                                         <td><%= usuario %></td>
-                                        <td><a href="anuncianteservlet?action=delete&id=<%= id_anunciante %>" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este anunciante?')">Eliminar</a></td>
+                                        <td>
+                                            <form method="POST" action="anuncianteservlet?action=delete">
+                                                <input type="hidden" name="id" value="<%= id_anunciante %>"></input>
+                                                <button class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este anunciante?')">Eliminar</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 <%
                                     }

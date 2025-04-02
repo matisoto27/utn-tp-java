@@ -32,7 +32,7 @@
                             Precio pre = new Precio();
                             pre = pc.getUltimoByPropiedad(prop);
                             int value = prop.getNroPropiedad();
-                            String direccionPisoDepto = prop.getDireccion() + " " + prop.getPiso() + " " + prop.getDepto();
+                            String direccionPisoDepto = prop.getPiso() > 0 ? prop.getDireccion() + " " + prop.getPiso() + prop.getDepto() : prop.getDireccion();
                             if (pre != null && !pre.getFechaDesde().equals(LocalDate.now()) || pre == null) {
                         %>
                             	<option value="<%= value %>"><%= direccionPisoDepto %></option>

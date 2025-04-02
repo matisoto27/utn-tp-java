@@ -58,7 +58,7 @@
                                             <%= prop.getDireccion() %>
                                         </td>
                                         <td>
-                                            <%= prop.getPiso() != 0 ? prop.getPiso() : "-" %>
+                                            <%= prop.getPiso() > 0 ? prop.getPiso() : "-" %>
                                         </td>
                                         <td>
                                             <%= prop.getDepto() != null ? prop.getDepto() : "-" %>

@@ -25,5 +25,9 @@ public class PrecioController {
 	public void add(Precio p) {
 		pd.add(p);
 	}
+	
+	public void deleteByPropiedad(Propiedad prop) {
+		pd.deleteByPropiedad(prop);
+	}
 
 }
