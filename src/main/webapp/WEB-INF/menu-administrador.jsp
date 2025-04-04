@@ -1,3 +1,5 @@
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <!doctype html>
 <html lang="es">
 
@@ -15,7 +17,9 @@
             <div class="list-group text-center">
                 <a href="anuncianteservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">CRUD Anunciante</a>
                 <a href="clienteservlet" class="list-group-item list-group-item-action mb-3">CRUD Cliente</a>
-                <a href="" class="list-group-item list-group-item-action">Cerrar Sesión</a>
+                <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">CRUD Propiedad</a>
+                <!-- Falta cerrar la sesion -->
+                <a href="index.html" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>
             </div>
         </div>
     </div>

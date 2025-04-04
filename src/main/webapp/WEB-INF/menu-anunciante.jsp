@@ -19,11 +19,11 @@
         <div class="d-flex justify-content-center align-items-center">
             <div class="list-group text-center">
                 <a href="alquilerservlet?action=alquileresconfirmadosbyanunciante" class="list-group-item list-group-item-action mb-3">Alquileres en curso</a>
-                <a href="propiedadservlet?action=propiedadesbyanunciante" class="list-group-item list-group-item-action mb-3">Ver mis Propiedades</a>
                 <a href="propiedadservlet?action=create" class="list-group-item list-group-item-action mb-3">Registrar Propiedad</a>
+                <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Ver mis Propiedades</a>
                 <a href="precioservlet?action=create" class="list-group-item list-group-item-action mb-3">Registrar Precio de una Propiedad</a>
                 <!-- Falta cerrar la sesion -->
-                <a href="index.html" class="list-group-item list-group-item-action mb-3">Cerrar SesiÃ³n</a>
+                <a href="index.html" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>
             </div>
         </div>
     </div>

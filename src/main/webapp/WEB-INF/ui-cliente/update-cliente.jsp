@@ -60,8 +60,7 @@
                         <button type="submit" class="btn btn-primary w-100">Guardar cambios</button>
                     </div>
                     <div class="col-12 mb-4">
-                        <button type="button" class="btn btn-secondary w-100"
-                            onclick='window.location.href="menu-cliente.html"'>Volver</button>
+                        <button type="button" class="btn btn-secondary w-100" onclick='window.location.href="login"'>Volver</button>
                     </div>
                 </div>
             </form>

@@ -51,8 +51,7 @@
             </div>
             <div class="row mb-4">
                 <div class="col text-center">
-                    <button type="button" class="btn btn-primary p-2" style="width: 250px;"
-                        onclick='window.location.href="menu-cliente.html"'>Volver</button>
+                    <button type="button" class="btn btn-primary p-2" style="width: 250px;" onclick='window.location.href="login"'>Volver</button>
                 </div>
             </div>
         </div>

@@ -28,17 +28,23 @@
                     <label for="nro-propiedad" class="form-label">Seleccione una Propiedad</label>
                     <select class="form-select" name="nro-propiedad" id="nro-propiedad" required>
                         <%
-                        for (Propiedad prop : propiedades) {
-                            Precio pre = new Precio();
-                            pre = pc.getUltimoByPropiedad(prop);
-                            int value = prop.getNroPropiedad();
-                            String direccionPisoDepto = prop.getPiso() > 0 ? prop.getDireccion() + " " + prop.getPiso() + prop.getDepto() : prop.getDireccion();
-                            if (pre != null && !pre.getFechaDesde().equals(LocalDate.now()) || pre == null) {
+                        	if (!propiedades.isEmpty()) {
+                        		for (Propiedad prop : propiedades) {
+                            		Precio pre = new Precio();
+                            		pre = pc.getUltimoByPropiedad(prop);
+                            		int value = prop.getNroPropiedad();
+                            		String direccionPisoDepto = prop.getPiso() > 0 ? prop.getDireccion() + " " + prop.getPiso() + prop.getDepto() : prop.getDireccion();
+                            		if (pre != null && !pre.getFechaDesde().equals(LocalDate.now()) || pre == null) {
                         %>
-                            	<option value="<%= value %>"><%= direccionPisoDepto %></option>
+                            			<option value="<%= value %>"><%= direccionPisoDepto %></option>
                         <%
-                            }
-                        }
+                            		}
+                        		}
+                        	} else {
+                        %>
+                        		<option selected <%= propiedades.isEmpty() ? "disabled" : "" %>>No hay propiedades disponibles</option>
+                        <%
+                     		}
                         %>
                     </select>
                 </div>
@@ -47,11 +53,10 @@
                     <input type="text" class="form-control" name="valor" id="valor">
                 </div>
                 <div class="mb-2">
-                    <button type="submit" class="btn btn-primary w-100">Registrar</button>
+                    <button type="submit" class="btn btn-primary w-100" <%= propiedades.isEmpty() ? "disabled" : "" %>>Registrar</button>
                 </div>
                 <div class="mb-4">
-                    <button type="button" class="btn btn-secondary w-100"
-                        onclick='window.location.href="menu-anunciante.html"'>Volver</button>
+                    <button type="button" class="btn btn-secondary w-100" onclick='window.location.href="login"'>Volver</button>
                 </div>
             </form>
         </div>

@@ -9,7 +9,32 @@ public class Propiedad {
 	private String depto;
 	private Double precio_actual;
 	private String estado;
-
+	
+	public Propiedad() {}
+	
+	// Delete
+	public Propiedad(Anunciante anunciante, int nro_propiedad) {
+        this.anunciante = anunciante;
+        this.nro_propiedad = nro_propiedad;
+    }
+	
+	// Create
+	public Propiedad(Anunciante anunciante, String direccion, Integer piso, String depto) {
+        this.anunciante = anunciante;
+        this.direccion = direccion;
+        this.piso = piso;
+        this.depto = depto;
+    }
+	
+	// Update
+	public Propiedad(Anunciante anunciante, int nro_propiedad, String direccion, Integer piso, String depto) {
+        this.anunciante = anunciante;
+        this.nro_propiedad = nro_propiedad;
+        this.direccion = direccion;
+        this.piso = piso;
+        this.depto = depto;
+    }
+	
 	public Anunciante getAnunciante() {
 		return anunciante;
 	}

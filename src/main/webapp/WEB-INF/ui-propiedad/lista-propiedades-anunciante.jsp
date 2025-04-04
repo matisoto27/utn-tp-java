@@ -39,7 +39,7 @@
                             if (propiedades.isEmpty()) {
                      	%>
                                 <tr>
-                                    <td colspan="8" style="text-align: center;">
+                                    <td colspan="7" style="text-align: center;">
                                         Todavía no has registrado ninguna propiedad
                                     </td>
                                 </tr>
@@ -47,26 +47,31 @@
                             } else {
                             	for (Propiedad prop : propiedades) {
                             		int nro_propiedad = prop.getNroPropiedad();
+                                    String direccion = prop.getDireccion();
+                                    String piso = prop.getPiso() > 0 ? Integer.toString(prop.getPiso()) : "-";
+                                    String depto = prop.getDepto() != null ? prop.getDepto() : "-";
+                                    String precio = prop.getPrecioActual() != 0 ? Double.toString(prop.getPrecioActual()) : "Sin datos";
+                                    String estado = prop.getEstado();
                    		%>
                                     <tr>
                                         <td>
-                                            <%= prop.getDireccion() %>
+                                            <%= direccion %>
                                         </td>
                                         <td>
-                                            <%= prop.getPiso() > 0 ? prop.getPiso() : "-" %>
+                                            <%= piso %>
                                         </td>
                                         <td>
-                                            <%= prop.getDepto() != null ? prop.getDepto() : "-" %>
+                                            <%= depto %>
                                         </td>
                                         <td>
-                                            <%= prop.getPrecioActual() != 0 ? prop.getPrecioActual() : "Sin datos" %>
+                                            <%= precio %>
                                         </td>
                                   	<%
-                                    	if (prop.getEstado() != null && prop.getEstado().equals("Confirmado")) {
+                                    	if (estado != null && estado.equals("En curso")) {
                                    	%>
                                     		<td>Alquilada</td>
                                   	<%
-                                    	} else if (prop.getEstado() != null && prop.getEstado().equals("Pendiente")) {
+                                    	} else if (estado != null && estado.equals("Pendiente")) {
                                   	%>
                                     		<td>Pendiente</td>
                                  	<%
@@ -81,7 +86,7 @@
                                        </td>
                                        <td>
                                             <form method="POST" action="propiedadservlet?action=delete">
-                                                <input type="hidden" name="nro-propiedad" value="<%= prop.getNroPropiedad() %>"></input>
+                                                <input type="hidden" name="nro-propiedad" value="<%= nro_propiedad %>"></input>
                                                 <button class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar esta propiedad?')">Eliminar</button>
                                             </form>
                                        </td>
@@ -96,7 +101,7 @@
             </div>
             <div class="row mb-4">
                 <div class="col text-center">
-                    <button type="button" class="btn btn-primary p-2" style="width: 250px;" onclick='window.location.href="menu-anunciante.html"'>Volver</button>
+                    <button type="button" class="btn btn-primary p-2" style="width: 250px;" onclick='window.location.href="login"'>Volver</button>
                 </div>
             </div>
         </div>

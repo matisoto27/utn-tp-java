@@ -23,9 +23,25 @@ public class Login extends HttpServlet {
 		super();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		Object usuario = request.getSession().getAttribute("usuario");
+		String rol = (String) request.getSession().getAttribute("rol");
+		if (usuario != null && !rol.isEmpty()) {
+			switch (rol) {
+				case "cliente": {
+					request.getRequestDispatcher("WEB-INF/menu-cliente.jsp").forward(request, response);
+					break;
+				}
+				case "anunciante": {
+					request.getRequestDispatcher("WEB-INF/menu-anunciante.jsp").forward(request, response);
+					break;
+				}
+				case "administrador": {
+					request.getRequestDispatcher("WEB-INF/menu-administrador.jsp").forward(request, response);
+					break;
+				}
+			}
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -48,7 +64,7 @@ public class Login extends HttpServlet {
 			if (cli != null) {
 				request.getSession().setAttribute("usuario", cli);
 				request.getSession().setAttribute("rol", "cliente");
-				response.sendRedirect("menu-cliente.html");
+				request.getRequestDispatcher("WEB-INF/menu-cliente.jsp").forward(request, response);
 			} else {
 				// Manejar error cliente no existe
 			}
@@ -84,7 +100,7 @@ public class Login extends HttpServlet {
 			if (adm != null) {
 				request.getSession().setAttribute("usuario", adm);
 				request.getSession().setAttribute("rol", "administrador");
-				response.sendRedirect("menu-administrador.html");
+				request.getRequestDispatcher("WEB-INF/menu-administrador.jsp").forward(request, response);
 			} else {
 				// Manejar error anunciante no existe
 			}

@@ -51,9 +51,9 @@
                             <label for="contrasena" class="form-label">Contraseña</label>
                             <input type="text" class="form-control" name="contrasena" id="contrasena" required>
                         </div>
-                        <button type="submit" class="btn btn-success w-100 mb-2">Registrar</button>
-                        <button type="button" class="btn btn-primary w-100 mb-2" onclick="resetForm()">Limpiar formulario</button>
-                        <button type="button" class="btn btn-secondary w-100" onclick='window.location.href="menu-administrador.html"'>Volver</button>
+                        <button type="submit" class="btn btn-success w-100 mb-2">Registrar Cliente</button>
+                        <button type="button" class="btn btn-primary w-100 mb-2" onclick='window.location.href="clienteservlet?action=retrieve"'>Limpiar formulario</button>
+                        <button type="button" class="btn btn-secondary w-100" onclick='window.location.href="login"'>Volver</button>
                     </form>
                 </div>
                 <div class="col-8">
@@ -119,23 +119,6 @@
             document.getElementById('dni').setAttribute('readonly', true);
             document.getElementById('dni').style.backgroundColor = "#e9ecef";
             submitButton.textContent = "Guardar cambios";
-        }
-        function resetForm() {
-            document.getElementById('dni').value = '';
-            document.getElementById('nombre').value = '';
-            document.getElementById('apellido').value = '';
-            document.getElementById('fecha-nac').value = '';
-            document.getElementById('email').value = '';
-            document.getElementById('telefono').value = '';
-            document.getElementById('contrasena').value = '';
-            var form = document.querySelector('form');
-            var h2 = form.querySelector('h2');
-            var submitButton = form.querySelector('button[type="submit"]');
-            form.action = 'clienteservlet?action=create';
-            h2.textContent = 'Registrar Cliente';
-            document.getElementById('dni').setAttribute('readonly', false);
-            document.getElementById('dni').style.backgroundColor = "";
-            submitButton.textContent = "Registrar";
         }
     </script>
 </body>

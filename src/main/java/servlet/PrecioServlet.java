@@ -57,7 +57,7 @@ public class PrecioServlet extends HttpServlet {
 		p.setValor(valor);
 
 		pc.add(p);
-		response.sendRedirect("menu-anunciante.html");
+		request.getRequestDispatcher("WEB-INF/menu-anunciante.jsp").forward(request, response);
 	}
 
 }

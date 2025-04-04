@@ -1,3 +1,5 @@
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <!doctype html>
 <html lang="es">
 
@@ -14,8 +16,7 @@
         <div class="d-flex justify-content-center align-items-center">
             <div class="list-group text-center">
                 <a href="anuncianteservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Conoce a los Anunciantes de Propiedades</a>
-                <a href="propiedadservlet?action=propiedadesdisponibles"
-                    class="list-group-item list-group-item-action mb-3">Ver Propiedades para Alquilar</a>
+                <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Ver Propiedades para Alquilar</a>
                 <a href="clienteservlet?action=update" class="list-group-item list-group-item-action mb-3">Actualizar mi perfil</a>
                 <!-- Falta cerrar la sesion -->
                 <a href="index.html" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>
