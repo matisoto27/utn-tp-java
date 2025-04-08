@@ -1,7 +1,10 @@
 package logic;
 
+import java.util.LinkedList;
+
 import data.AlquilerData;
 import entities.Alquiler;
+import entities.Anunciante;
 
 public class AlquilerController {
 
@@ -25,6 +28,10 @@ public class AlquilerController {
 
 	public void delete(Alquiler alq) {
 		ad.delete(alq);
+	}
+	
+	public LinkedList<Alquiler> getAlquileresEnCursoByAnunciante(Anunciante anun) {
+		return ad.getAlquileresEnCursoByAnunciante(anun);
 	}
 
 }

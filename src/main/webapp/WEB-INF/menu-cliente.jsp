@@ -9,6 +9,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <%
+    	String mensaje = null;
+    	String mensaje_session = (String) session.getAttribute("mensaje");
+    	String mensaje_request = (String) request.getAttribute("mensaje");
+    	if (mensaje_session != null) {
+    		mensaje = mensaje_session;
+    		request.getSession().removeAttribute("mensaje");
+    	} else if (mensaje_request != null) {
+    		mensaje = mensaje_request;
+    	} else {
+    		mensaje = "";
+    	}
+    %>
 </head>
 
 <body>
@@ -18,8 +31,8 @@
                 <a href="anuncianteservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Conoce a los Anunciantes de Propiedades</a>
                 <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Ver Propiedades para Alquilar</a>
                 <a href="clienteservlet?action=update" class="list-group-item list-group-item-action mb-3">Actualizar mi perfil</a>
-                <!-- Falta cerrar la sesion -->
-                <a href="index.html" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>
+                <a href="clienteservlet?action=delete" class="list-group-item list-group-item-action mb-3" onclick="return confirm('¿Estás seguro de que deseas eliminar tu cuenta?')">Eliminar mi perfil</a>
+                <a href="logout" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>
             </div>
         </div>
     </div>
@@ -48,6 +61,16 @@
             modalBody.textContent = message;
             modal.show();
         }
+
+        window.onload = function () {
+        	var mensaje = "<%= mensaje %>";
+            const modal = new bootstrap.Modal(document.getElementById('modalId'));
+            const modalBody = document.getElementById('modal-body');
+            if (mensaje) {
+                modalBody.innerHTML = mensaje;
+                modal.show();
+            }
+        };
     </script>
 </body>
 

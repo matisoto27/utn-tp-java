@@ -3,6 +3,7 @@ package logic;
 import java.util.LinkedList;
 
 import data.ClienteData;
+import entities.Alquiler;
 import entities.Cliente;
 
 public class ClienteController {
@@ -43,5 +44,10 @@ public class ClienteController {
 	public void delete(Cliente cli) {
 		cd.delete(cli);
 	}
-
+	
+	public boolean tieneAlquiler(Cliente c) {
+		Alquiler a = cd.getLastAlquiler(c);
+		return (a != null && (a.getEstado().equals("Pendiente") || a.getEstado().equals("En curso")));
+	}
+	
 }

@@ -1,3 +1,5 @@
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <!doctype html>
 <html lang="es">
 
@@ -7,6 +9,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <%
+    	String mensaje = null;
+    	String mensaje_session = (String) session.getAttribute("mensaje");
+    	String mensaje_request = (String) request.getAttribute("mensaje");
+    	if (mensaje_session != null) {
+    		mensaje = mensaje_session;
+    		request.getSession().removeAttribute("mensaje");
+    	} else if (mensaje_request != null) {
+    		mensaje = mensaje_request;
+    	} else {
+    		mensaje = "";
+    	}
+    %>
 </head>
 
 <body>
@@ -19,8 +34,8 @@
                 <div class="mb-3">
                     <label for="tipo" class="form-label">Seleccionar Tipo</label>
                     <select class="form-select" name="tipo" id="tipo">
-                        <option value="cliente">Soy Cliente</option>
                         <option value="anunciante">Soy Anunciante</option>
+                        <option value="cliente">Soy Cliente</option>
                         <option value="administrador">Soy Administrador</option>
                     </select>
                 </div>
@@ -45,10 +60,34 @@
             </form>
         </div>
     </div>
+    <div class="modal fade" id="modalId" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+        aria-labelledby="modalTitleId" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleId">Mensaje</h5>
+                </div>
+                <div class="modal-body" id="modal-body">Body</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Bootstrap JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
     <script>
+        window.onload = function () {
+        	var mensaje = "<%= mensaje %>";
+            const modal = new bootstrap.Modal(document.getElementById('modalId'));
+            const modalBody = document.getElementById('modal-body');
+            if (mensaje) {
+                modalBody.innerHTML = mensaje;
+                modal.show();
+            }
+        };
+
         // Actualizar campo del formulario dependiendo del tipo
         document.getElementById('tipo').addEventListener('change', function () {
             const tipoSeleccionado = this.value;
@@ -76,7 +115,7 @@
         });
 
         // Disparar el evento de cambio para asegurar que se muestre el campo correcto inicialmente
-        document.getElementById('tipo').dispatchEvent(new Event('change'));
+        document.getElementById('tipo').dispatchEvent(new Event('change'));        
     </script>
 </body>
 

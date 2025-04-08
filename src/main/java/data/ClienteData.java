@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.LinkedList;
 
+import entities.Alquiler;
 import entities.Cliente;
 
 public class ClienteData {
@@ -158,5 +159,40 @@ public class ClienteData {
 			}
 		}
 	}
-
+	
+	public Alquiler getLastAlquiler(Cliente c) {
+		Alquiler a = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = DbConnector.getInstancia().getConn().prepareStatement(
+					  "SELECT * "
+					+ "FROM alquileres alq "
+					+ "WHERE alq.dni_cliente = ? "
+					+ "ORDER BY fecha_solicitado DESC "
+					+ "LIMIT 1");
+			stmt.setString(1, c.getDni());
+			rs = stmt.executeQuery();
+			if (rs != null && rs.next()) {
+				a = new Alquiler();
+				a.setEstado(rs.getString("estado"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				DbConnector.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return a;
+	}
+	
 }

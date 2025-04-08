@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import logic.AnuncianteController;
-import logic.PrecioController;
 import logic.PropiedadController;
 
 @WebServlet({ "/PropiedadServlet", "/propiedadservlet" })
@@ -141,7 +140,6 @@ public class PropiedadServlet extends HttpServlet {
 						mensaje = "No puedes eliminar esta propiedad debido a que tiene un alquiler pendiente o en curso. Por favor, cancele el alquiler y vuelva a intentarlo.";
 					} else {
 						mensaje = "Propiedad eliminada con éxito.";
-						new PrecioController().deleteByPropiedad(prop);
 						pc.delete(prop);
 					}
 					request.getSession().setAttribute("mensaje", mensaje);

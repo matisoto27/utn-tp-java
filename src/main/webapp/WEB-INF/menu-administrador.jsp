@@ -16,7 +16,7 @@
         <div class="d-flex justify-content-center align-items-center">
             <div class="list-group text-center">
                 <a href="anuncianteservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">CRUD Anunciante</a>
-                <a href="clienteservlet" class="list-group-item list-group-item-action mb-3">CRUD Cliente</a>
+                <a href="clienteservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">CRUD Cliente</a>
                 <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">CRUD Propiedad</a>
                 <!-- Falta cerrar la sesion -->
                 <a href="index.html" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>

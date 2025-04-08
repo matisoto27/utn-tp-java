@@ -18,7 +18,7 @@
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="d-flex justify-content-center align-items-center">
             <div class="list-group text-center">
-                <a href="alquilerservlet?action=alquileresconfirmadosbyanunciante" class="list-group-item list-group-item-action mb-3">Alquileres en curso</a>
+                <a href="alquilerservlet?action=alquileresencursobyanunciante" class="list-group-item list-group-item-action mb-3">Alquileres en curso</a>
                 <a href="propiedadservlet?action=create" class="list-group-item list-group-item-action mb-3">Registrar Propiedad</a>
                 <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Ver mis Propiedades</a>
                 <a href="precioservlet?action=create" class="list-group-item list-group-item-action mb-3">Registrar Precio de una Propiedad</a>

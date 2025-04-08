@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 import entities.Alquiler;
 import entities.Anunciante;
@@ -22,13 +23,23 @@ public class AlquilerServlet extends HttpServlet {
 		super();
 	}
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		AlquilerController ac = new AlquilerController();
+		String action = request.getParameter("action");
+		if (action != null) {
+			switch (action) {
+			case "alquileresencursobyanunciante": {
+				Anunciante anun = (Anunciante) request.getSession().getAttribute("usuario");
+				LinkedList<Alquiler> alquileres = ac.getAlquileresEnCursoByAnunciante(anun);
+				request.setAttribute("alquileres", alquileres);
+				request.getRequestDispatcher("WEB-INF/ui-alquiler/lista-alquileres-en-curso.jsp").forward(request,
+						response);
+			}
+			}
+		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Alquiler alq = new Alquiler();
 		AlquilerController ac = new AlquilerController();
 
