@@ -155,8 +155,8 @@ public class ClienteServlet extends HttpServlet {
 						errores.append("contrasena_invalida,");
 					} else {
 						if (rol.equals("cliente")) {
-							String contrasena2 = request.getParameter("contrasena2").trim();;
-							if (contrasena2 != null && !contrasena.equals(contrasena2)) {
+							String contrasena2 = request.getParameter("contrasena2").trim();
+							if (!contrasena.equals(contrasena2)) {
 								errores.append("contrasenas_no_coinciden,");
 							} else {
 								cli.setContrasena(contrasena);

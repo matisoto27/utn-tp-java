@@ -10,16 +10,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="styles.css">
     <%
-    	String mensaje = null;
-    	String mensaje_session = (String) session.getAttribute("mensaje");
+    	String mensaje = "";
+    	String mensaje_session = (String) request.getSession().getAttribute("mensaje");
     	String mensaje_request = (String) request.getAttribute("mensaje");
     	if (mensaje_session != null) {
     		mensaje = mensaje_session;
     		request.getSession().removeAttribute("mensaje");
     	} else if (mensaje_request != null) {
     		mensaje = mensaje_request;
-    	} else {
-    		mensaje = "";
     	}
     %>
 </head>

@@ -22,8 +22,9 @@
                 <a href="propiedadservlet?action=create" class="list-group-item list-group-item-action mb-3">Registrar Propiedad</a>
                 <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Ver mis Propiedades</a>
                 <a href="precioservlet?action=create" class="list-group-item list-group-item-action mb-3">Registrar Precio de una Propiedad</a>
-                <!-- Falta cerrar la sesion -->
-                <a href="index.html" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>
+                <a href="anuncianteservlet?action=update" class="list-group-item list-group-item-action mb-3">Actualizar mi perfil</a>
+                <a href="anuncianteservlet?action=delete" class="list-group-item list-group-item-action mb-3" onclick="return confirm('¿Estás seguro de que deseas eliminar tu cuenta?')">Eliminar mi cuenta</a>
+                <a href="logout" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>
             </div>
         </div>
     </div>

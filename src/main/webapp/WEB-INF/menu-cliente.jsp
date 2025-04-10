@@ -31,7 +31,7 @@
                 <a href="anuncianteservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Conoce a los Anunciantes de Propiedades</a>
                 <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Ver Propiedades para Alquilar</a>
                 <a href="clienteservlet?action=update" class="list-group-item list-group-item-action mb-3">Actualizar mi perfil</a>
-                <a href="clienteservlet?action=delete" class="list-group-item list-group-item-action mb-3" onclick="return confirm('¿Estás seguro de que deseas eliminar tu cuenta?')">Eliminar mi perfil</a>
+                <a href="clienteservlet?action=delete" class="list-group-item list-group-item-action mb-3" onclick="return confirm('¿Estás seguro de que deseas eliminar tu cuenta?')">Eliminar mi cuenta</a>
                 <a href="logout" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>
             </div>
         </div>

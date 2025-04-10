@@ -30,7 +30,7 @@ public class AlquilerServlet extends HttpServlet {
 			switch (action) {
 			case "alquileresencursobyanunciante": {
 				Anunciante anun = (Anunciante) request.getSession().getAttribute("usuario");
-				LinkedList<Alquiler> alquileres = ac.getAlquileresEnCursoByAnunciante(anun);
+				LinkedList<Alquiler> alquileres = ac.getAlquileresPendientesEnCursoByAnunciante(anun);
 				request.setAttribute("alquileres", alquileres);
 				request.getRequestDispatcher("WEB-INF/ui-alquiler/lista-alquileres-en-curso.jsp").forward(request,
 						response);

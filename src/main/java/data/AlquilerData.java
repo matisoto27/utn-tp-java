@@ -254,7 +254,7 @@ public class AlquilerData {
 		}
 	}
 	
-	public LinkedList<Alquiler> getAlquileresEnCursoByAnunciante(Anunciante anun) {
+	public LinkedList<Alquiler> getAlquileresPendientesEnCursoByAnunciante(Anunciante anun) {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		LinkedList<Alquiler> alquileres = new LinkedList<>();
@@ -281,7 +281,10 @@ public class AlquilerData {
 					+ "			GROUP BY id_anunciante, nro_propiedad"
 					+ "		) "
 					+ "WHERE alq.id_anunciante = ? "
-					+ "		AND alq.estado = 'En curso' ");
+					+ "		AND ("
+					+ "			alq.estado = 'Pendiente' "
+					+ "			OR alq.estado = 'En curso'"
+					+ "		)");
 			stmt.setInt(1, anun.getIdAnunciante());
 			rs = stmt.executeQuery();
 			if (rs != null) {

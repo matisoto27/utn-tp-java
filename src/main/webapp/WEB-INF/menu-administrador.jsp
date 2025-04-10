@@ -18,8 +18,7 @@
                 <a href="anuncianteservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">CRUD Anunciante</a>
                 <a href="clienteservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">CRUD Cliente</a>
                 <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">CRUD Propiedad</a>
-                <!-- Falta cerrar la sesion -->
-                <a href="index.html" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>
+                <a href="logout" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>
             </div>
         </div>
     </div>

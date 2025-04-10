@@ -22,14 +22,14 @@ public class AnuncianteController {
 		return ad.getByQuery(query, anun.getIdAnunciante());
 	}
 
-	public boolean validarNombreUnico(Anunciante anun) {
+	public boolean validarNombreUnico(String nombre) {
 		String query = "SELECT * FROM anunciantes WHERE nombre = ?";
-		return ad.getByQuery(query, anun.getNombre()) == null;
+		return ad.getByQuery(query, nombre) == null;
 	}
 
-	public boolean validarUsuarioUnico(Anunciante anun) {
+	public boolean validarUsuarioUnico(String usuario) {
 		String query = "SELECT * FROM anunciantes WHERE usuario = ?";
-		return ad.getByQuery(query, anun.getUsuario()) == null;
+		return ad.getByQuery(query, usuario) == null;
 	}
 
 	public Anunciante validarCredenciales(Anunciante anun) {

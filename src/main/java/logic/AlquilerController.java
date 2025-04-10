@@ -30,8 +30,8 @@ public class AlquilerController {
 		ad.delete(alq);
 	}
 	
-	public LinkedList<Alquiler> getAlquileresEnCursoByAnunciante(Anunciante anun) {
-		return ad.getAlquileresEnCursoByAnunciante(anun);
+	public LinkedList<Alquiler> getAlquileresPendientesEnCursoByAnunciante(Anunciante anun) {
+		return ad.getAlquileresPendientesEnCursoByAnunciante(anun);
 	}
 
 }
