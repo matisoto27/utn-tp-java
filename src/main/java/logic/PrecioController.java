@@ -1,5 +1,6 @@
 package logic;
 
+import java.time.LocalDate;
 import java.util.LinkedList;
 
 import data.PrecioData;
@@ -22,12 +23,25 @@ public class PrecioController {
 		return pd.getUltimoByPropiedad(prop);
 	}
 
+	public boolean precioAsignadoHoy(Propiedad prop) {
+		Precio pre = pd.getUltimoByPropiedad(prop);
+		if (pre != null) {
+			return pre.getFechaDesde().equals(LocalDate.now()) ? true : false;
+		} else {
+			return false;
+		}
+	}
+	
 	public void add(Precio p) {
 		pd.add(p);
 	}
 	
-	public void deleteByPropiedad(Propiedad prop) {
-		pd.deleteByPropiedad(prop);
+	public void update(Precio p) {
+		pd.update(p);
+	}
+	
+	public void delete(Precio p) {
+		pd.deleteByPropiedad(p);
 	}
 
 }

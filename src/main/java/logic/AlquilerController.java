@@ -21,6 +21,10 @@ public class AlquilerController {
 	public void add(Alquiler alq) {
 		ad.add(alq);
 	}
+	
+	public LinkedList<Alquiler> getAll() {
+		return ad.getAll();
+	}
 
 	public void update(Alquiler alq) {
 		ad.update(alq);
@@ -28,6 +32,10 @@ public class AlquilerController {
 
 	public void delete(Alquiler alq) {
 		ad.delete(alq);
+	}
+	
+	public Alquiler getById(Alquiler alq) {
+		return ad.getById(alq);
 	}
 	
 	public LinkedList<Alquiler> getAlquileresPendientesEnCursoByAnunciante(Anunciante anun) {

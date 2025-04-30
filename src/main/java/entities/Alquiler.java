@@ -13,9 +13,24 @@ public class Alquiler {
 	private LocalDate fecha_fin_contrato;
 	private Double precio;
 	private LocalDate fecha_renuncia;
-	private int puntuacion;
+	private Integer puntuacion;
 	private String comentario;
-
+	
+	public Alquiler () {}
+	
+	public Alquiler(int id_alquiler, Cliente cliente, Propiedad propiedad, LocalDate fecha_solicitado, String estado, LocalDate fecha_inicio_contrato, LocalDate fecha_fin_contrato, LocalDate fecha_renuncia, Integer puntuacion, String comentario) {
+		this.id_alquiler = id_alquiler;
+		this.cliente = cliente;
+		this.propiedad = propiedad;
+		this.fecha_solicitado = fecha_solicitado;
+		this.estado = estado;
+		this.fecha_inicio_contrato = fecha_inicio_contrato;
+		this.fecha_fin_contrato = fecha_fin_contrato;
+		this.fecha_renuncia = fecha_renuncia;
+		this.puntuacion = puntuacion;
+		this.comentario = comentario;
+	}
+	
 	public int getIdAlquiler() {
 		return id_alquiler;
 	}
@@ -88,11 +103,11 @@ public class Alquiler {
 		this.fecha_renuncia = fecha_renuncia;
 	}
 
-	public int getPuntuacion() {
+	public Integer getPuntuacion() {
 		return puntuacion;
 	}
 
-	public void setPuntuacion(int puntuacion) {
+	public void setPuntuacion(Integer puntuacion) {
 		this.puntuacion = puntuacion;
 	}
 

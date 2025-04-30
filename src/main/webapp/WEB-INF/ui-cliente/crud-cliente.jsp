@@ -109,7 +109,7 @@
                                         <td><%= telefono %></td>
                                         <td>
                                             <form method="POST" action="clienteservlet?action=delete">
-                                                <input type="hidden" name="dni" value="<%= dni %>"></input>
+                                                <input type="hidden" name="dni" value="<%= dni %>">
                                                 <button class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este cliente?')">Eliminar</button>
                                             </form>
                                         </td>

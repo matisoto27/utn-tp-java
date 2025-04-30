@@ -148,12 +148,35 @@ public class PrecioData {
 		}
 	}
 	
-	public void deleteByPropiedad(Propiedad p) {
+	public void update(Precio pre) {
+		PreparedStatement stmt = null;
+		try {
+			stmt = DbConnector.getInstancia().getConn().prepareStatement("UPDATE precios SET valor = ? WHERE id_anunciante = ? AND nro_propiedad = ? AND fecha_desde = ?");
+			stmt.setDouble(1, pre.getValor());
+			stmt.setInt(2, pre.getPropiedad().getAnunciante().getIdAnunciante());
+			stmt.setInt(3, pre.getPropiedad().getNroPropiedad());
+			stmt.setObject(4, pre.getFechaDesde());
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+				DbConnector.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void deleteByPropiedad(Precio pre) {
 		PreparedStatement stmt = null;
 		try {
 			stmt = DbConnector.getInstancia().getConn().prepareStatement("DELETE FROM precios WHERE id_anunciante = ? AND nro_propiedad = ?");
-			stmt.setInt(1, p.getAnunciante().getIdAnunciante());
-			stmt.setInt(2, p.getNroPropiedad());
+			stmt.setInt(1, pre.getPropiedad().getAnunciante().getIdAnunciante());
+			stmt.setInt(2, pre.getPropiedad().getNroPropiedad());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

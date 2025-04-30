@@ -47,9 +47,9 @@
                                     String cliente = alq.getCliente().getApellido() + " " + alq.getCliente().getNombre();
                                     String direccion = alq.getPropiedad().getPiso() == 0 ? alq.getPropiedad().getDireccion() : alq.getPropiedad().getDireccion() + " " + alq.getPropiedad().getPiso() + alq.getPropiedad().getDepto();
                                     String fecha_solicitado = alq.getFechaSolicitado().toString();
-                                    String fecha_inicio_contrato = alq.getFechaInicioContrato().toString();
-                                    String fecha_fin_contrato = alq.getFechaFinContrato().toString();
-                                    String precio = alq.getPrecio() != 0 ? Double.toString(alq.getPrecio()) : "Sin datos";
+                                    String fecha_inicio_contrato = alq.getFechaInicioContrato() != null ? alq.getFechaInicioContrato().toString() : "-";
+                                    String fecha_fin_contrato = alq.getFechaFinContrato() != null ? alq.getFechaFinContrato().toString() : "-";
+                                    String precio = alq.getPrecio() > 0 ? Double.toString(alq.getPrecio()) : "Sin datos";
                            	%>
                                     <tr>
                                         <td>
