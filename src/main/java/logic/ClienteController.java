@@ -50,4 +50,9 @@ public class ClienteController {
 		return (a != null && (a.getEstado().equals("Pendiente") || a.getEstado().equals("En curso")));
 	}
 	
+	public boolean tieneAlquilerPendiente(Cliente c) {
+		Alquiler a = cd.getLastAlquiler(c);
+		return (a != null && a.getEstado().equals("Pendiente"));
+	}
+	
 }

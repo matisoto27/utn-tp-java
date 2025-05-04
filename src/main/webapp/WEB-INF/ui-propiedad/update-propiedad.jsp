@@ -36,7 +36,7 @@
                     <input type="text" class="form-control" name="depto" id="depto" <%= prop.getDepto() != null ? "value='" + prop.getDepto() + "'" : "" %>>
                 </div>
                 <button type="submit" class="btn btn-primary w-100 mb-2">Guardar cambios</button>
-                <button type="button" class="btn btn-secondary w-100" onclick='window.location.href="propiedadservlet?action=propiedadesbyanunciante"'>Volver</button>
+                <button type="button" class="btn btn-secondary w-100" onclick='window.location.href="propiedadservlet?action=retrieve"'>Volver</button>
             </form>
         </div>
     </div>

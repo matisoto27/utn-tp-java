@@ -1,4 +1,5 @@
 <%@page import="entities.*" %>
+<%@page import="logic.AlquilerController" %>
 <%@page import="java.util.LinkedList" %>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
@@ -74,15 +75,32 @@
                                         <td>
                                         	<%
                                         		if (estado != null && estado.equals("Pendiente")) {
+                                                    Alquiler alq = new Alquiler();
+                                                    alq.setPropiedad(new Propiedad());
+                                                    alq.getPropiedad().setAnunciante(new Anunciante());
+                                                    alq.getPropiedad().getAnunciante().setIdAnunciante(id_anunciante);
+                                                    alq.getPropiedad().setNroPropiedad(nro_propiedad);
+                                                    alq = new AlquilerController().getUltimoByPropiedad(alq);
+                                                    if (alq != null && alq.getCliente().getDni().equals(cli.getDni())) {
                                         	%>
-                                        			<button class="btn btn-secondary disabled">Reservado</button>
+                                                        <form method="POST" action="alquilerservlet?action=delete" onsubmit="return confirm('¿Estás seguro de que quieres cancelar la reserva?');">
+                                                            <input type="hidden" name="dni-cliente" value="<%= dni_cliente %>"></input>
+                                                            <input type="hidden" name="id-anunciante" value="<%= id_anunciante %>"></input>
+                                                            <input type="hidden" name="nro-propiedad" value="<%= nro_propiedad %>"></input>
+                                                            <button class="btn btn-danger">Cancelar reserva</button>
+                                                        </form>
                                         	<%
+                                                    } else {
+                                            %>
+                                                        <button class="btn btn-secondary">Reservado</button>
+                                            <%
+                                                    }
                                         		} else {
                                         	%>
-                                        			<form method="POST" action="alquilerservlet">
+                                        			<form method="POST" action="alquilerservlet?action=create" onsubmit="return confirm('¿Estás seguro de que quieres reservar esta propiedad?');">
                                                 		<input type="hidden" name="dni-cliente" value="<%= dni_cliente %>"></input>
-                                                		<input type="hidden" name="nro-propiedad" value="<%= nro_propiedad %>"></input>
                                                 		<input type="hidden" name="id-anunciante" value="<%= id_anunciante %>"></input>
+                                                		<input type="hidden" name="nro-propiedad" value="<%= nro_propiedad %>"></input>
                                                 		<button class="btn btn-success">Solicitar visita</button>
                                             		</form>
                                             <%

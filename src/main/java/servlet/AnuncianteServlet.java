@@ -23,7 +23,7 @@ public class AnuncianteServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String rol = (String) request.getSession().getAttribute("rol");
-		if (!rol.equals("administrador") && !rol.equals("anunciante")) {
+		if (!rol.equals("administrador") && !rol.equals("anunciante") && !rol.equals("cliente")) {
 			response.sendRedirect("http://localhost:8080/utn-tp-java/");
 			return;
 		}
@@ -53,6 +53,10 @@ public class AnuncianteServlet extends HttpServlet {
 						LinkedList<Anunciante> anunciantes = ac.getAll();
 						request.setAttribute("anunciantes", anunciantes);
 						request.getRequestDispatcher("WEB-INF/ui-anunciante/crud-anunciante.jsp").forward(request, response);
+					} if (rol.equals("cliente")) {
+						LinkedList<Anunciante> anunciantes = ac.getAll();
+						request.setAttribute("anunciantes", anunciantes);
+						request.getRequestDispatcher("WEB-INF/ui-anunciante/lista-anunciantes.jsp").forward(request, response);
 					} else {
 						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
 					}

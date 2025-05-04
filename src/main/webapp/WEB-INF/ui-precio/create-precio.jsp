@@ -22,11 +22,12 @@
 <body>
     <div class="d-flex justify-content-center align-items-center min-vh-100">
         <div class="d-flex justify-content-center align-items-center form-container" style="width: 500px;">
-            <form method="post" action="precioservlet" style="width: 300px;">
+            <form method="post" action="precioservlet?action=create" style="width: 300px;">
                 <h2 class="text-center my-4">Registrar Precio</h2>
                 <div class="mb-3">
                     <label for="nro-propiedad" class="form-label">Seleccione una Propiedad</label>
                     <select class="form-select" name="nro-propiedad" id="nro-propiedad" required>
+                        <option value="" disabled selected>Seleccione una propiedad</option>
                         <%
                         	if (!propiedades.isEmpty()) {
                         		for (Propiedad prop : propiedades) {

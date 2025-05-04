@@ -17,7 +17,7 @@ public class AlquilerController {
 	public Alquiler getUltimoByPropiedad(Alquiler alq) {
 		return ad.getUltimoByPropiedad(alq);
 	}
-
+	
 	public void add(Alquiler alq) {
 		ad.add(alq);
 	}
@@ -38,8 +38,16 @@ public class AlquilerController {
 		return ad.getById(alq);
 	}
 	
+	public Alquiler getUltimoAlquilerCliente(Alquiler alq) {
+		return ad.getUltimoAlquilerCliente(alq);
+	}
+	
 	public LinkedList<Alquiler> getAlquileresPendientesEnCursoByAnunciante(Anunciante anun) {
 		return ad.getAlquileresPendientesEnCursoByAnunciante(anun);
 	}
-
+	
+	public LinkedList<Alquiler> getAlquileresPendientesByAnunciante(Anunciante anun) {
+		return ad.getAlquileresPendientesByAnunciante(anun);
+	}
+	
 }

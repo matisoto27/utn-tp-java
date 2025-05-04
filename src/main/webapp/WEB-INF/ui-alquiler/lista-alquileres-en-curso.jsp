@@ -30,6 +30,7 @@
                                 <th scope="col">Fecha Inicio Contrato</th>
                                 <th scope="col">Fecha Fin Contrato</th>
                                 <th scope="col">Precio</th>
+                                <th scope="col">Estado</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,15 +46,20 @@
                             } else {
                             	for (Alquiler alq : alquileres) {
                                     String cliente = alq.getCliente().getApellido() + " " + alq.getCliente().getNombre();
+                                    String email = alq.getCliente().getEmail();
+                                    String telefono = alq.getCliente().getTelefono();
                                     String direccion = alq.getPropiedad().getPiso() == 0 ? alq.getPropiedad().getDireccion() : alq.getPropiedad().getDireccion() + " " + alq.getPropiedad().getPiso() + alq.getPropiedad().getDepto();
                                     String fecha_solicitado = alq.getFechaSolicitado().toString();
+                                    String estado = alq.getEstado();
                                     String fecha_inicio_contrato = alq.getFechaInicioContrato() != null ? alq.getFechaInicioContrato().toString() : "-";
                                     String fecha_fin_contrato = alq.getFechaFinContrato() != null ? alq.getFechaFinContrato().toString() : "-";
-                                    String precio = alq.getPrecio() > 0 ? Double.toString(alq.getPrecio()) : "Sin datos";
+                                    String precio = alq.getPrecio() > 0 ? Double.toString(alq.getPrecio()) : "-";
                            	%>
                                     <tr>
                                         <td>
-                                            <%= cliente %>
+                                            <button class="btn btn-link p-0" onclick="abrirModal('<%= cliente %>', '<%= email %>', '<%= telefono %>')">
+                                                <%= cliente %>
+                                            </button>
                                         </td>
                                         <td>
                                             <%= direccion %>
@@ -70,8 +76,23 @@
                                         <td>
                                             <%= precio %>
                                         </td>
+                            <%
+                                    if (estado.equals("En curso")) {
+                            %>
+                                        <td>
+                                            <h5><span class="badge bg-success">En curso</span></h5>
+                                        </td>
+                            <%
+                                    } else {
+                            %>
+                                        <td>
+                                            <h5><span class="badge bg-warning text-dark">Pendiente</span></h5>
+                                        </td>
+                            <%
+                                    }
+                            %>
                                     </tr>
-                             	<%
+                            <%
                                 }
                            	}
                          	%>
@@ -86,8 +107,31 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modalCliente" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleId">Titulo</h5>
+                </div>
+                <div class="modal-body" id="modal-body">Cuerpo</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    <script>
+        function abrirModal(cliente, email, telefono) {
+          const modal = new bootstrap.Modal(document.getElementById('modalCliente'));
+          const modalTitle = document.querySelector('#modalCliente .modal-title');
+          const modalBody = document.querySelector('#modalCliente #modal-body');
+          modalTitle.innerHTML = 'Datos para contactar a <br>' + cliente;
+          modalBody.innerHTML = '<p><strong>Email:</strong> ' + email + '</p><br><p><strong>Teléfono:</strong> ' + telefono + '</p>';
+          modal.show();
+        }
+      </script>
 </body>
 
 </html>

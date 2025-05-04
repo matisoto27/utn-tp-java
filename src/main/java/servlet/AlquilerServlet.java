@@ -76,6 +76,25 @@ public class AlquilerServlet extends HttpServlet {
 					}
 					break;
 				}
+				case "update": {
+					if (rol.equals("anunciante")) {
+						Anunciante anun = (Anunciante) request.getSession().getAttribute("usuario");
+						LinkedList<Alquiler> alquileres = ac.getAlquileresPendientesByAnunciante(anun);
+						request.setAttribute("alquileres", alquileres);
+						request.getRequestDispatcher("WEB-INF/ui-alquiler/update-alquiler.jsp").forward(request, response);
+						break;
+					}
+				}
+				case "alquileractual": {
+					if (rol.equals("cliente")) {
+						Cliente cli = (Cliente) request.getSession().getAttribute("usuario");
+						alq.setCliente(cli);
+						alq = ac.getUltimoAlquilerCliente(alq);
+						request.setAttribute("alquiler", alq);
+						request.getRequestDispatcher("WEB-INF/ui-alquiler/alquiler-actual.jsp").forward(request, response);
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -96,6 +115,16 @@ public class AlquilerServlet extends HttpServlet {
 					String dni_cliente = request.getParameter("dni-cliente");
 					int id_anunciante = Integer.parseInt(request.getParameter("id-anunciante"));
 					int nro_propiedad = Integer.parseInt(request.getParameter("nro-propiedad"));
+					if (rol.equals("cliente")) {
+						Cliente cli = new Cliente();
+						cli.setDni(dni_cliente);
+						if (new ClienteController().tieneAlquiler(cli)) {
+							mensaje = "Actualmente tienes una reserva activa para visitar una propiedad.";
+							request.setAttribute("mensaje", mensaje);
+							request.getRequestDispatcher("WEB-INF/menu-cliente.jsp").forward(request, response);
+							return;
+						}
+					}
 					alq.setCliente(new Cliente());
 					alq.getCliente().setDni(dni_cliente);
 					alq.setPropiedad(new Propiedad());
@@ -109,10 +138,12 @@ public class AlquilerServlet extends HttpServlet {
 						request.getRequestDispatcher("WEB-INF/menu-cliente.jsp").forward(request, response);
 					} else if (rol.equals("anunciante")) {
 						// Falta alquiler de parte del anunciante
-					} else {
+					} else if (rol.equals("administrador")) {
 						mensaje = "Alquiler creado con éxito.";
 						request.getSession().setAttribute("mensaje", mensaje);
 						response.sendRedirect("alquilerservlet?action=retrieve");
+					} else {
+						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
 					}
 					break;
 				}
@@ -153,17 +184,80 @@ public class AlquilerServlet extends HttpServlet {
 					break;
 				}
 				case "delete": {
+					if (rol.equals("administrador")) {
+						int id_alquiler = Integer.parseInt(request.getParameter("id-alquiler"));
+						alq.setIdAlquiler(id_alquiler);
+						alq = ac.getById(alq);
+						if (alq.getEstado() != null && (alq.getEstado().equals("Pendiente") || alq.getEstado().equals("En curso"))) {
+							mensaje = "No puedes eliminar este alquiler debido a que está pendiente o en curso. Por favor, cancele el alquiler y vuelva a intentarlo.";
+						} else {
+							mensaje = "Alquiler eliminado con éxito.";
+							ac.delete(alq);
+						}
+						request.getSession().setAttribute("mensaje", mensaje);
+						response.sendRedirect("alquilerservlet?action=retrieve");
+					} else if (rol.equals("cliente")) {
+						String dni_cliente = request.getParameter("dni-cliente");
+						int id_anunciante = Integer.parseInt(request.getParameter("id-anunciante"));
+						int nro_propiedad = Integer.parseInt(request.getParameter("nro-propiedad"));
+						alq.setCliente(new Cliente());
+						alq.getCliente().setDni(dni_cliente);
+						alq.setPropiedad(new Propiedad());
+						alq.getPropiedad().setNroPropiedad(nro_propiedad);
+						alq.getPropiedad().setAnunciante(new Anunciante());
+						alq.getPropiedad().getAnunciante().setIdAnunciante(id_anunciante);
+						ac.delete(alq);
+						mensaje = "Reserva cancelada.";
+						request.setAttribute("mensaje", mensaje);
+						request.getRequestDispatcher("WEB-INF/menu-cliente.jsp").forward(request, response);
+					}
+					break;
+				}
+				case "iniciarcontrato": {
+					if (rol.equals("anunciante")) {
+						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+						int id_alquiler = Integer.parseInt(request.getParameter("id-alquiler"));
+						alq.setIdAlquiler(id_alquiler);
+						LocalDate fecha_inicio_contrato = !request.getParameter("fecha-inicio-contrato").isEmpty() ?
+								LocalDate.parse(request.getParameter("fecha-inicio-contrato"), dtf) 
+								: null;
+						LocalDate fecha_fin_contrato = !request.getParameter("fecha-fin-contrato").isEmpty() ?
+								LocalDate.parse(request.getParameter("fecha-fin-contrato"), dtf)
+								: null;
+						if (fecha_inicio_contrato == null || fecha_fin_contrato == null || 
+						!fecha_inicio_contrato.isBefore(fecha_fin_contrato) || 
+						fecha_inicio_contrato.isBefore(LocalDate.now()) || 
+						fecha_fin_contrato.isBefore(LocalDate.now()) || 
+						fecha_inicio_contrato.isEqual(fecha_fin_contrato)) {
+						    mensaje = "La fecha de inicio debe ser menor que la fecha de fin del contrato.";
+						    request.setAttribute("mensaje", mensaje);
+							request.getRequestDispatcher("WEB-INF/menu-anunciante.jsp").forward(request, response);
+							return;
+						}
+						alq = ac.getById(alq);
+						alq.setEstado("En curso");
+						alq.setFechaInicioContrato(fecha_inicio_contrato);
+						alq.setFechaFinContrato(fecha_fin_contrato);
+						alq.setPuntuacion(null);
+						ac.update(alq);
+						mensaje = "Contrato de alquiler registrado con éxito.";
+						request.setAttribute("mensaje", mensaje);
+						request.getRequestDispatcher("WEB-INF/menu-anunciante.jsp").forward(request, response);
+						break;
+					} else {
+						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+					}
+				}
+				case "cancelarcontrato": {
 					int id_alquiler = Integer.parseInt(request.getParameter("id-alquiler"));
 					alq.setIdAlquiler(id_alquiler);
 					alq = ac.getById(alq);
-					if (alq.getEstado() != null && (alq.getEstado().equals("Pendiente") || alq.getEstado().equals("En curso"))) {
-						mensaje = "No puedes eliminar este alquiler debido a que está pendiente o en curso. Por favor, cancele el alquiler y vuelva a intentarlo.";
-					} else {
-						mensaje = "Alquiler eliminado con éxito.";
-						ac.delete(alq);
-					}
-					request.getSession().setAttribute("mensaje", mensaje);
-					response.sendRedirect("alquilerservlet?action=retrieve");
+					alq.setFechaRenuncia(LocalDate.now());
+					alq.setPuntuacion(null);
+					ac.update(alq);
+					mensaje = "Contrato de alquiler cancelado.";
+					request.setAttribute("mensaje", mensaje);
+					request.getRequestDispatcher("WEB-INF/menu-cliente.jsp").forward(request, response);
 					break;
 				}
 			}
