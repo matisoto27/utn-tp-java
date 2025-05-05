@@ -1,4 +1,5 @@
 <%@page import="entities.*" %>
+<%@page import="java.time.LocalDate" %>
 <%@page import="java.util.LinkedList" %>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
@@ -33,30 +34,85 @@
                 <div class="card-header bg-primary text-white">
                     <h4 class="mb-0">Detalles del Contrato de Alquiler</h4>
                 </div>
-                <div class="card-body">
-                    <p><strong>Anunciante:</strong> <%= nombre %></p>
-                    <p><strong>Correo electrónico:</strong> <%= email %></p>
-                    <p><strong>Teléfono:</strong> <%= telefono %></p>
-                    <p><strong>Propiedad:</strong> <%= direccionPisoDepto %></p>
-                    <p><strong>Precio:</strong> $<%= precio %></p>
-                    <p><strong>Fecha de inicio:</strong> <%= fecha_inicio_contrato %></p>
-                    <p><strong>Fecha de finalización:</strong> <%= fecha_fin_contrato %></p>
-                    <div class="text-center mt-4">
-                        <form method="post" action="alquilerservlet?action=cancelarcontrato">
-                            <input type="hidden" name="id-alquiler" id="id-alquiler" value="<%= id_alquiler %>">
-                            <button class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas cancelar el contrato de alquiler?')">Cancelar Contrato</button>
-                        </form>
+                    <div class="card-body">
+                        <p><strong>Anunciante:</strong> <%= nombre %></p>
+                        <p><strong>Correo electrónico:</strong> <%= email %></p>
+                        <p><strong>Teléfono:</strong> <%= telefono %></p>
+                        <p><strong>Propiedad:</strong> <%= direccionPisoDepto %></p>
+                        <p><strong>Precio:</strong> $<%= precio %></p>
+                        <p><strong>Fecha de inicio:</strong> <%= fecha_inicio_contrato %></p>
+                        <p><strong>Fecha de finalización:</strong> <%= fecha_fin_contrato %></p>
+                        <%
+                        if (alq.getFechaFinContrato().isAfter(LocalDate.now())) {
+                        %>
+                            <div class="text-center mt-4">
+                                <form method="post" action="alquilerservlet?action=cancelarcontrato">
+                                    <input type="hidden" name="id-alquiler" id="id-alquiler" value="<%= id_alquiler %>">
+                                    <button class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas cancelar el contrato de alquiler?')">Cancelar Contrato</button>
+                                </form>
+                            </div>
+                        <%
+                        } else {
+                        %>
+                            <div class="alert alert-info text-center mt-4">
+                                <strong>¡El contrato ha finalizado!</strong>
+                            </div>
+                            <%
+                            if (alq.getPuntuacion() == 0) {
+                            %>
+                            <div class="text-center mt-4">
+                                <h5>Tu opinión nos interesa</h5>
+                                <form method="post" action="alquilerservlet?action=puntuacioncomentario" onsubmit="return validarFormulario()">
+                                    <input type="hidden" name="id-alquiler" id="id-alquiler" value="<%= id_alquiler %>">
+                                    <div class="mb-3">
+                                        <label for="puntuacion" class="form-label">Puntaje (1-10):</label>
+                                        <input type="number" class="form-control" name="puntuacion" id="puntuacion" min="1" max="10" oninput="mostrarComentario()">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="comentario">Comentario:</label>
+                                        <textarea class="form-control" style="resize: none;" name="comentario" id="comentario" rows="4" placeholder="Cuéntanos tu experiencia con la propiedad y el contrato de alquiler. ¿Fue lo que esperabas? ¿Qué mejorarías?" disabled></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Enviar Calificación</button>
+                                </form>
+                            </div>
+                            <%
+                            }
+                        }
+                        %>
+                        <div class="text-center mt-4">
+                            <button type="button" class="btn btn-secondary w-100" onclick='window.location.href="login"'>Volver</button>
+                        </div>
                     </div>
-                    <div class="text-center mt-4">
-                        <button type="button" class="btn btn-secondary w-100" onclick='window.location.href="login"'>Volver</button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
     <!-- Bootstrap JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+    <script>
+        function mostrarComentario() {
+            var puntuacion = document.getElementById("puntuacion").value;
+            var comentario = document.getElementById("comentario");
+            if (puntuacion >= 1 && puntuacion <= 10) {
+                comentario.disabled = false;
+            } else {
+                comentario.disabled = true;
+            }
+        }
+        function validarFormulario() {
+            var puntuacion = document.getElementById("puntuacion").value;
+            var comentario = document.getElementById("comentario").value;
+            if (puntuacion < 1 || puntuacion > 10) {
+                alert("Por favor, ingrese una puntuación entre 1 y 10.");
+                return false;
+            }
+            if (comentario.trim() !== "" && (puntuacion === "" || puntuacion < 1 || puntuacion > 10)) {
+                alert("Por favor, ingrese una puntuación.");
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 
 </html>

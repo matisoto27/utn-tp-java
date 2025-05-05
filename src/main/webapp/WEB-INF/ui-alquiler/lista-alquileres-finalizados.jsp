@@ -30,7 +30,8 @@
                                 <th scope="col">Fecha Inicio Contrato</th>
                                 <th scope="col">Fecha Fin Contrato</th>
                                 <th scope="col">Precio</th>
-                                <th scope="col">Estado</th>
+                                <th scope="col">Puntuación</th>
+                                <th scope="col">Comentario</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,7 +40,7 @@
                             %>
                                 <tr>
                                     <td colspan="8" style="text-align: center;">
-                                        No existe ningún alquiler en curso
+                                        No existen alquileres finalizados
                                     </td>
                                 </tr>
                             <%
@@ -51,11 +52,10 @@
                                     String telefono = alq.getCliente().getTelefono();
                                     String direccion = alq.getPropiedad().getPiso() == 0 ? alq.getPropiedad().getDireccion() : alq.getPropiedad().getDireccion() + " " + alq.getPropiedad().getPiso() + alq.getPropiedad().getDepto();
                                     String fecha_solicitado = alq.getFechaSolicitado().toString();
-                                    String estado = alq.getEstado();
                                     String fecha_inicio_contrato = alq.getFechaInicioContrato() != null ? alq.getFechaInicioContrato().toString() : "-";
                                     String fecha_fin_contrato = alq.getFechaFinContrato() != null ? alq.getFechaFinContrato().toString() : "-";
                                     Integer puntuacion = alq.getPuntuacion();
-                                    String comentario = alq.getComentario() != null ? alq.getComentario() : "";
+                                    String comentario = alq.getComentario();
                                     String precio = alq.getPrecio() > 0 ? Double.toString(alq.getPrecio()) : "-";
                            	%>
                                     <tr>
@@ -79,29 +79,12 @@
                                         <td>
                                             <%= precio %>
                                         </td>
-                            <%
-                                    if (estado.equals("En curso")) {
-                                        if (puntuacion == 0) {
-                            %>
                                         <td>
-                                            <h5><span class="badge bg-success">En curso</span></h5>
+                                            <%= puntuacion %>
                                         </td>
-                            <%
-                                        } else {
-                            %>
-                                            <td>
-                                                <button class="btn btn-primary" onclick="finalizarAlquiler('<%= id_alquiler %>', '<%= cliente %>', '<%= puntuacion %>', '<%= comentario %>')">Ver puntuación y finalizar</button>
-                                            </td>
-                            <%
-                                        }
-                                    } else {
-                            %>
                                         <td>
-                                            <h5><span class="badge bg-warning text-dark">Pendiente</span></h5>
+                                            <%= comentario != null ? comentario : "-" %>
                                         </td>
-                            <%
-                                    }
-                            %>
                                     </tr>
                             <%
                                 }
@@ -131,23 +114,6 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="modalPuntuacion" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitleId">Titulo</h5>
-                </div>
-                <div class="modal-body" id="modal-body">Cuerpo</div>
-                <div class="modal-footer">
-                    <form method="post" action="alquilerservlet?action=finalizarcontrato">
-                        <input type="hidden" name="id-alquiler" id="id-alquiler">
-                        <button type="submit" class="btn btn-primary w-100">Finalizar contrato</button>
-                    </form>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
     <script>
@@ -158,16 +124,6 @@
           modalTitle.innerHTML = 'Datos para contactar a <br>' + cliente;
           modalBody.innerHTML = '<p><strong>Email:</strong> ' + email + '</p><br><p><strong>Teléfono:</strong> ' + telefono + '</p>';
           modal.show();
-        }
-        function finalizarAlquiler(idAlquiler, cliente, puntuacion, comentario) {
-            const modal = new bootstrap.Modal(document.getElementById('modalPuntuacion'));
-            const modalTitle = document.querySelector('#modalPuntuacion .modal-title');
-            const modalBody = document.querySelector('#modalPuntuacion #modal-body');
-            const idAlquilerInput = document.querySelector('#modalPuntuacion #id-alquiler');
-            modalTitle.innerHTML = 'Contrato de alquiler de ' + cliente;
-            modalBody.innerHTML = '<p><strong>Puntuación:</strong> ' + puntuacion + '</p><br><p><strong>Comentario:</strong> ' + comentario + '</p>';
-            idAlquilerInput.value = idAlquiler;
-            modal.show();
         }
     </script>
 </body>

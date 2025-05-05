@@ -15,7 +15,7 @@ public class AlquilerController {
 	}
 
 	public Alquiler getUltimoByPropiedad(Alquiler alq) {
-		return ad.getUltimoByPropiedad(alq);
+		return ad.getUltimoAlquilerByPropiedad(alq);
 	}
 	
 	public void add(Alquiler alq) {
@@ -39,15 +39,19 @@ public class AlquilerController {
 	}
 	
 	public Alquiler getUltimoAlquilerCliente(Alquiler alq) {
-		return ad.getUltimoAlquilerCliente(alq);
+		return ad.getUltimoAlquilerByCliente(alq);
 	}
 	
 	public LinkedList<Alquiler> getAlquileresPendientesEnCursoByAnunciante(Anunciante anun) {
-		return ad.getAlquileresPendientesEnCursoByAnunciante(anun);
+		return ad.getAlquileresByAnuncianteYEstados(anun, "Pendiente", "En curso");
 	}
 	
 	public LinkedList<Alquiler> getAlquileresPendientesByAnunciante(Anunciante anun) {
-		return ad.getAlquileresPendientesByAnunciante(anun);
+		return ad.getAlquileresByAnuncianteYEstados(anun, "Pendiente");
+	}
+	
+	public LinkedList<Alquiler> getAlquileresFinalizadosByAnunciante(Anunciante anun) {
+		return ad.getAlquileresByAnuncianteYEstados(anun, "Finalizado");
 	}
 	
 }

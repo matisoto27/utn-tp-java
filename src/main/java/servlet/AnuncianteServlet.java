@@ -53,7 +53,7 @@ public class AnuncianteServlet extends HttpServlet {
 						LinkedList<Anunciante> anunciantes = ac.getAll();
 						request.setAttribute("anunciantes", anunciantes);
 						request.getRequestDispatcher("WEB-INF/ui-anunciante/crud-anunciante.jsp").forward(request, response);
-					} if (rol.equals("cliente")) {
+					} else if (rol.equals("cliente")) {
 						LinkedList<Anunciante> anunciantes = ac.getAll();
 						request.setAttribute("anunciantes", anunciantes);
 						request.getRequestDispatcher("WEB-INF/ui-anunciante/lista-anunciantes.jsp").forward(request, response);

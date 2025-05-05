@@ -40,10 +40,26 @@ public class AlquilerServlet extends HttpServlet {
 		if (action != null) {
 			switch (action) {
 				case "alquileresencursobyanunciante": {
-					Anunciante anun = (Anunciante) request.getSession().getAttribute("usuario");
-					LinkedList<Alquiler> alquileres = ac.getAlquileresPendientesEnCursoByAnunciante(anun);
-					request.setAttribute("alquileres", alquileres);
-					request.getRequestDispatcher("WEB-INF/ui-alquiler/lista-alquileres-en-curso.jsp").forward(request, response);
+					if (rol.equals("anunciante")) {
+						Anunciante anun = (Anunciante) request.getSession().getAttribute("usuario");
+						LinkedList<Alquiler> alquileres = ac.getAlquileresPendientesEnCursoByAnunciante(anun);
+						request.setAttribute("alquileres", alquileres);
+						request.getRequestDispatcher("WEB-INF/ui-alquiler/lista-alquileres-en-curso.jsp").forward(request, response);
+					} else {
+						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+					}
+					break;
+				}
+				case "alquileresfinalizadosbyanunciante": {
+					if (rol.equals("anunciante")) {
+						Anunciante anun = (Anunciante) request.getSession().getAttribute("usuario");
+						LinkedList<Alquiler> alquileres = ac.getAlquileresFinalizadosByAnunciante(anun);
+						request.setAttribute("alquileres", alquileres);
+						request.getRequestDispatcher("WEB-INF/ui-alquiler/lista-alquileres-finalizados.jsp").forward(request, response);
+					} else {
+						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+					}
+					break;
 				}
 				case "retrieve": {
 					if (rol.equals("administrador")) {
@@ -249,16 +265,52 @@ public class AlquilerServlet extends HttpServlet {
 					}
 				}
 				case "cancelarcontrato": {
-					int id_alquiler = Integer.parseInt(request.getParameter("id-alquiler"));
-					alq.setIdAlquiler(id_alquiler);
-					alq = ac.getById(alq);
-					alq.setFechaRenuncia(LocalDate.now());
-					alq.setPuntuacion(null);
-					ac.update(alq);
-					mensaje = "Contrato de alquiler cancelado.";
-					request.setAttribute("mensaje", mensaje);
-					request.getRequestDispatcher("WEB-INF/menu-cliente.jsp").forward(request, response);
+					if (rol.equals("cliente")) {
+						int id_alquiler = Integer.parseInt(request.getParameter("id-alquiler"));
+						alq.setIdAlquiler(id_alquiler);
+						alq = ac.getById(alq);
+						alq.setFechaRenuncia(LocalDate.now());
+						alq.setPuntuacion(null);
+						ac.update(alq);
+						mensaje = "Contrato de alquiler cancelado.";
+						request.setAttribute("mensaje", mensaje);
+						request.getRequestDispatcher("WEB-INF/menu-cliente.jsp").forward(request, response);
+					} else {
+						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+					}
 					break;
+				}
+				case "puntuacioncomentario": {
+					if (rol.equals("cliente")) {
+						int id_alquiler = Integer.parseInt(request.getParameter("id-alquiler"));
+						Integer puntuacion = Integer.parseInt(request.getParameter("puntuacion"));
+						String comentario = !request.getParameter("comentario").isEmpty() ? request.getParameter("comentario") : null;
+						alq.setIdAlquiler(id_alquiler);
+						alq = ac.getById(alq);
+						alq.setPuntuacion(puntuacion);
+						alq.setComentario(comentario);
+						ac.update(alq);
+						mensaje = "Su puntuación y comentarios han sido registrados con éxito. ¡Gracias por tu opinión!";
+						request.setAttribute("mensaje", mensaje);
+						request.getRequestDispatcher("WEB-INF/menu-cliente.jsp").forward(request, response);
+					} else {
+						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+					}
+					break;
+				}
+				case "finalizarcontrato": {
+					if (rol.equals("anunciante")) {
+						int id_alquiler = Integer.parseInt(request.getParameter("id-alquiler"));
+						alq.setIdAlquiler(id_alquiler);
+						alq = ac.getById(alq);
+						alq.setEstado("Finalizado");
+						ac.update(alq);
+						mensaje = "Se ha finalizado el contrato de alquiler.";
+						request.setAttribute("mensaje", mensaje);
+						request.getRequestDispatcher("WEB-INF/menu-anunciante.jsp").forward(request, response);
+					} else {
+						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+					}
 				}
 			}
 		}
