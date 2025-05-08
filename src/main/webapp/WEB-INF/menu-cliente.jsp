@@ -37,7 +37,7 @@
                 <a href="anuncianteservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Conoce a los Anunciantes de Propiedades</a>
                 <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Ver Propiedades para Alquilar</a>
                 <%
-                if (alq != null && (alq.getEstado().equals("Pendiente") || alq.getEstado().equals("En curso"))) {
+                if (alq != null && alq.getEstado().equals("En curso")) {
                 %>
                 	<a href="alquilerservlet?action=alquileractual" class="list-group-item list-group-item-action mb-3">Gestionar alquiler actual</a>
                	<%

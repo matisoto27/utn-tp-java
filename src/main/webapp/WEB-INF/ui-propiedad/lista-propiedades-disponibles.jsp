@@ -54,7 +54,6 @@
                                     String depto = prop.getDepto() != null ? prop.getDepto() : "-";
                                     String precio = prop.getPrecioActual() != 0 ? Double.toString(prop.getPrecioActual()) : "Sin datos";
                                     String estado = prop.getEstado();
-                                    String dni_cliente = cli.getDni();
                            	%>
                                     <tr>
                                         <td>
@@ -84,7 +83,6 @@
                                                     if (alq != null && alq.getCliente().getDni().equals(cli.getDni())) {
                                         	%>
                                                         <form method="POST" action="alquilerservlet?action=delete" onsubmit="return confirm('¿Estás seguro de que quieres cancelar la reserva?');">
-                                                            <input type="hidden" name="dni-cliente" value="<%= dni_cliente %>"></input>
                                                             <input type="hidden" name="id-anunciante" value="<%= id_anunciante %>"></input>
                                                             <input type="hidden" name="nro-propiedad" value="<%= nro_propiedad %>"></input>
                                                             <button class="btn btn-danger">Cancelar reserva</button>
@@ -98,7 +96,6 @@
                                         		} else {
                                         	%>
                                         			<form method="POST" action="alquilerservlet?action=create" onsubmit="return confirm('¿Estás seguro de que quieres reservar esta propiedad?');">
-                                                		<input type="hidden" name="dni-cliente" value="<%= dni_cliente %>"></input>
                                                 		<input type="hidden" name="id-anunciante" value="<%= id_anunciante %>"></input>
                                                 		<input type="hidden" name="nro-propiedad" value="<%= nro_propiedad %>"></input>
                                                 		<button class="btn btn-success">Solicitar visita</button>

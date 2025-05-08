@@ -19,6 +19,7 @@
         <div class="d-flex justify-content-center align-items-center">
             <div class="list-group text-center">
                 <a href="alquilerservlet?action=alquileresencursobyanunciante" class="list-group-item list-group-item-action mb-3">Alquileres pendientes o en curso</a>
+                <a href="alquilerservlet?action=alquilerescanceladosbyanunciante" class="list-group-item list-group-item-action mb-3">Alquileres cancelados</a>
                 <a href="alquilerservlet?action=alquileresfinalizadosbyanunciante" class="list-group-item list-group-item-action mb-3">Alquileres finalizados</a>
                 <a href="alquilerservlet?action=update" class="list-group-item list-group-item-action mb-3">Registrar contrato de alquiler</a>
                 <a href="propiedadservlet?action=create" class="list-group-item list-group-item-action mb-3">Registrar propiedad</a>

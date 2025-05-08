@@ -115,7 +115,7 @@ public class ClienteServlet extends HttpServlet {
 						errores.append("dni_invalido,");
 					}
 				
-					if (!cc.validarDniUnico(cli)) {
+					if (!cc.validarDniUnico(dni)) {
 						errores.append("dni_unico,");
 					} else {
 						cli.setDni(dni);

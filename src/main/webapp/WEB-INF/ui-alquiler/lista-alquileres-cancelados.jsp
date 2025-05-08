@@ -6,7 +6,7 @@
 <html lang="es">
 
 <head>
-    <title>Alquileres finalizados</title>
+    <title>Alquileres cancelados</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -30,8 +30,7 @@
                                 <th scope="col">Fecha Inicio Contrato</th>
                                 <th scope="col">Fecha Fin Contrato</th>
                                 <th scope="col">Precio</th>
-                                <th scope="col">Puntuación</th>
-                                <th scope="col">Comentario</th>
+                                <th scope="col">Fecha Renuncia</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -40,7 +39,7 @@
                             %>
                                 <tr>
                                     <td colspan="8" style="text-align: center;">
-                                        No existen alquileres finalizados
+                                        No existen alquileres cancelados
                                     </td>
                                 </tr>
                             <%
@@ -54,9 +53,8 @@
                                     String fecha_solicitado = alq.getFechaSolicitado().toString();
                                     String fecha_inicio_contrato = alq.getFechaInicioContrato().toString();
                                     String fecha_fin_contrato = alq.getFechaFinContrato().toString();
-                                    String puntuacion = alq.getPuntuacion() != 0 ? Integer.toString(alq.getPuntuacion()) : "-";
-                                    String comentario = alq.getComentario();
                                     String precio = alq.getPrecio() > 0 ? Double.toString(alq.getPrecio()) : "-";
+                                    String fecha_renuncia = alq.getFechaRenuncia().toString();
                            	%>
                                     <tr>
                                         <td>
@@ -80,10 +78,7 @@
                                             <%= precio %>
                                         </td>
                                         <td>
-                                            <%= puntuacion %>
-                                        </td>
-                                        <td>
-                                            <%= comentario != null ? comentario : "-" %>
+                                            <%= fecha_renuncia %>
                                         </td>
                                     </tr>
                             <%

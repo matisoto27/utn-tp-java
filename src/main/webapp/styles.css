@@ -23,7 +23,7 @@ body {
 .list-group .list-group-item {
     border-width: 1px;
     border-radius: 10px;
-    padding: 30px;
+    padding: 20px;
     transition: 0.3s;
     color: white;
 }

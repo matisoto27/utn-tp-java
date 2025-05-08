@@ -86,7 +86,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="fecha-solicitado" class="form-label">Fecha Solicitado</label>
-                            <input type="date" class="form-control" name="fecha-solicitado" id="fecha-solicitado" value="<%= fecha_solicitado %>">
+                            <input type="date" class="form-control" name="fecha-solicitado" id="fecha-solicitado" value="<%= fecha_solicitado %>" required>
                         </div>
                         <div class="mb-3">
                             <label for="estado" class="form-label">Estado</label>

@@ -50,6 +50,10 @@ public class AlquilerController {
 		return ad.getAlquileresByAnuncianteYEstados(anun, "Pendiente");
 	}
 	
+	public LinkedList<Alquiler> getAlquileresCanceladosByAnunciante(Anunciante anun) {
+		return ad.getAlquileresByAnuncianteYEstados(anun, "Cancelado");
+	}
+	
 	public LinkedList<Alquiler> getAlquileresFinalizadosByAnunciante(Anunciante anun) {
 		return ad.getAlquileresByAnuncianteYEstados(anun, "Finalizado");
 	}

@@ -1,4 +1,6 @@
 <%@page import="entities.*" %>
+<%@page import="java.time.LocalDate" %>
+<%@page import="java.time.temporal.ChronoUnit" %>
 <%@page import="java.util.LinkedList" %>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
@@ -39,11 +41,12 @@
                             %>
                                 <tr>
                                     <td colspan="8" style="text-align: center;">
-                                        No existe ningún alquiler en curso
+                                        No existe ningún alquiler pendiente o en curso
                                     </td>
                                 </tr>
                             <%
                             } else {
+                                LocalDate fecha_hoy = LocalDate.now();
                             	for (Alquiler alq : alquileres) {
                                     int id_alquiler = alq.getIdAlquiler();
                                     String cliente = alq.getCliente().getApellido() + " " + alq.getCliente().getNombre();
@@ -82,11 +85,21 @@
                             <%
                                     if (estado.equals("En curso")) {
                                         if (puntuacion == 0) {
+                                        	LocalDate fecha_fin = alq.getFechaFinContrato();
+                                            long diferencia = ChronoUnit.DAYS.between(fecha_fin, fecha_hoy);
+                                            if (diferencia > 7) {
                             %>
-                                        <td>
-                                            <h5><span class="badge bg-success">En curso</span></h5>
-                                        </td>
+                                                <td>
+                                                    <button class="btn btn-primary" onclick="finalizarAlquiler('<%= id_alquiler %>', '<%= cliente %>', 'Sin puntuación', 'Sin comentarios')">Ver puntuación y finalizar</button>
+                                                </td>
                             <%
+                                            } else {
+                            %>
+                                                <td>
+                                                    <h5><span class="badge bg-success">En curso</span></h5>
+                                                </td>
+                            <%
+                                            }
                                         } else {
                             %>
                                             <td>

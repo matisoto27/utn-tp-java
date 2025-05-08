@@ -339,20 +339,68 @@ public class AlquilerData {
 	}
 	
 	public void add(Alquiler alq) {
-		String dateFormat = "yyyy-MM-dd";
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern(dateFormat);
-		LocalDate fechaActual = LocalDate.now();
-		String estado = "Pendiente";
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			stmt = DbConnector.getInstancia().getConn().prepareStatement(
-					"INSERT INTO alquileres (dni_cliente, id_anunciante, nro_propiedad, fecha_solicitado, estado) VALUES (?, ?, ?, ?, ?)");
+			
+			if (alq.getFechaSolicitado() == null && alq.getEstado() == null) {
+				stmt = DbConnector.getInstancia().getConn().prepareStatement(
+						"INSERT INTO alquileres (dni_cliente, id_anunciante, nro_propiedad, fecha_solicitado, estado) VALUES (?, ?, ?, ?, ?)");
+			} else {
+				stmt = DbConnector.getInstancia().getConn().prepareStatement(
+						"INSERT INTO alquileres (dni_cliente, id_anunciante, nro_propiedad, fecha_solicitado, estado, fecha_inicio_contrato, fecha_fin_contrato, fecha_renuncia, puntuacion, comentario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			}
 			stmt.setString(1, alq.getCliente().getDni());
 			stmt.setInt(2, alq.getPropiedad().getAnunciante().getIdAnunciante());
 			stmt.setInt(3, alq.getPropiedad().getNroPropiedad());
-			stmt.setObject(4, fechaActual.format(dtf));
-			stmt.setString(5, estado);
+			if (alq.getFechaSolicitado() == null && alq.getEstado() == null) {
+				stmt.setObject(4, LocalDate.now().format(dtf));
+				stmt.setString(5, "Pendiente");
+			} else {
+				
+				if (alq.getFechaSolicitado() != null) {
+					stmt.setObject(4, alq.getFechaSolicitado().format(dtf));
+				} else {
+					stmt.setNull(4, Types.DATE);
+				}
+				
+				if (alq.getEstado() != null) {
+					stmt.setString(5, alq.getEstado());
+				} else {
+					stmt.setNull(5, Types.VARCHAR);
+				}
+				
+				if (alq.getFechaInicioContrato() != null) {
+					stmt.setObject(6, alq.getFechaInicioContrato().format(dtf));
+				} else {
+					stmt.setNull(6, Types.DATE);
+				}
+				
+				if (alq.getFechaFinContrato() != null) {
+					stmt.setObject(7, alq.getFechaFinContrato().format(dtf));
+				} else {
+					stmt.setNull(7, Types.DATE);
+				}
+				
+				if (alq.getFechaRenuncia() != null) {
+					stmt.setObject(8, alq.getFechaRenuncia().format(dtf));
+				} else {
+					stmt.setNull(8, Types.DATE);
+				}
+				
+				if (alq.getPuntuacion() != null) {
+					stmt.setInt(9, alq.getPuntuacion());
+				} else {
+					stmt.setNull(9, Types.INTEGER);
+				}
+				
+				if (alq.getComentario() != null) {
+					stmt.setString(10, alq.getComentario());
+				} else {
+					stmt.setNull(10, Types.VARCHAR);
+				}
+			}
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

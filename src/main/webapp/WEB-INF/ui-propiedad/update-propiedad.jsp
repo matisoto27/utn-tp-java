@@ -29,7 +29,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="piso" class="form-label">Piso</label>
-                    <input type="number" class="form-control" name="piso" id="piso" <%= prop.getPiso() > 0 ? "value='" + prop.getPiso() + "'" : "" %>>
+                    <input type="number" class="form-control" name="piso" id="piso" min="0" <%= prop.getPiso() > 0 ? "value='" + prop.getPiso() + "'" : "" %>>
                 </div>
                 <div class="mb-4">
                     <label for="depto" class="form-label">Departamento</label>

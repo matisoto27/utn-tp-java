@@ -29,11 +29,14 @@ public class PropiedadData {
 			stmt.setInt(1, p.getAnunciante().getIdAnunciante());
 			stmt.setInt(2, nro_propiedad);
 			stmt.setString(3, p.getDireccion());
-			if (p.getPiso() == null && p.getDepto() == null) {
+			if (p.getPiso() == null) {
 				stmt.setNull(4, Types.INTEGER);
-				stmt.setNull(5, Types.VARCHAR);
 			} else {
 				stmt.setInt(4, p.getPiso());
+			}
+			if (p.getDepto() == null) {
+				stmt.setNull(5, Types.VARCHAR);
+			} else {
 				stmt.setString(5, p.getDepto());
 			}
 			stmt.executeUpdate();

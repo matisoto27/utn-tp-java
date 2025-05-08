@@ -66,11 +66,11 @@
                                     <input type="hidden" name="id-alquiler" id="id-alquiler" value="<%= id_alquiler %>">
                                     <div class="mb-3">
                                         <label for="puntuacion" class="form-label">Puntaje (1-10):</label>
-                                        <input type="number" class="form-control" name="puntuacion" id="puntuacion" min="1" max="10" oninput="mostrarComentario()">
+                                        <input type="number" class="form-control" name="puntuacion" id="puntuacion" min="1" max="10" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="comentario">Comentario:</label>
-                                        <textarea class="form-control" style="resize: none;" name="comentario" id="comentario" rows="4" placeholder="Cuéntanos tu experiencia con la propiedad y el contrato de alquiler. ¿Fue lo que esperabas? ¿Qué mejorarías?" disabled></textarea>
+                                        <textarea class="form-control" style="resize: none;" name="comentario" id="comentario" rows="4" placeholder="Cuéntanos tu experiencia con la propiedad y el contrato de alquiler. ¿Fue lo que esperabas? ¿Qué mejorarías?"></textarea>
                                     </div>
                                     <button type="submit" class="btn btn-primary w-100">Enviar Calificación</button>
                                 </form>
@@ -89,30 +89,6 @@
     <!-- Bootstrap JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
-    <script>
-        function mostrarComentario() {
-            var puntuacion = document.getElementById("puntuacion").value;
-            var comentario = document.getElementById("comentario");
-            if (puntuacion >= 1 && puntuacion <= 10) {
-                comentario.disabled = false;
-            } else {
-                comentario.disabled = true;
-            }
-        }
-        function validarFormulario() {
-            var puntuacion = document.getElementById("puntuacion").value;
-            var comentario = document.getElementById("comentario").value;
-            if (puntuacion < 1 || puntuacion > 10) {
-                alert("Por favor, ingrese una puntuación entre 1 y 10.");
-                return false;
-            }
-            if (comentario.trim() !== "" && (puntuacion === "" || puntuacion < 1 || puntuacion > 10)) {
-                alert("Por favor, ingrese una puntuación.");
-                return false;
-            }
-            return true;
-        }
-    </script>
 </body>
 
 </html>

@@ -23,9 +23,9 @@ public class ClienteController {
 		return cd.getByQuery(query, cli.getDni());
 	}
 
-	public boolean validarDniUnico(Cliente cli) {
+	public boolean validarDniUnico(String dni) {
 		String query = "SELECT * FROM clientes WHERE dni = ?";
-		return cd.getByQuery(query, cli.getDni()) == null;
+		return (cd.getByQuery(query, dni) == null);
 	}
 
 	public Cliente validarCredenciales(Cliente cli) {
