@@ -28,7 +28,7 @@ public class PropiedadServlet extends HttpServlet {
 			return;
 		}
 		if (!rol.equals("administrador") && !rol.equals("anunciante") && !rol.equals("cliente")) {
-			response.sendRedirect("http://localhost:8080/utn-tp-java/");
+			request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
 			return;
 		}
 		PropiedadController pc = new PropiedadController();
