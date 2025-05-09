@@ -175,7 +175,7 @@
                              	%>
                                             <form method="POST" action="alquilerservlet?action=delete">
                                                 <input type="hidden" name="id-alquiler" value="<%= id_alquiler %>"></input>
-                                                <button class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este alquiler?')">Eliminar</button>
+                                                <button class="btn btn-danger" onclick="event.stopPropagation(); return confirm('¿Estás seguro de que deseas eliminar este alquiler?')">Eliminar</button>
                                             </form>
                              	<%
                                         }

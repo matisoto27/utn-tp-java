@@ -33,6 +33,7 @@
                         <div class="mb-3">
                             <label for="id-anunciante" class="form-label">Anunciante</label>
                             <select class="form-select" name="id-anunciante" id="id-anunciante" required>
+                                <option value="" disabled selected>Seleccione un anunciante</option>
                                 <%
                                     for (Anunciante anun : anunciantes) {
                                         int id_anunciante = anun.getIdAnunciante();
@@ -99,7 +100,7 @@
                                             <form method="POST" action="propiedadservlet?action=delete">
                                                 <input type="hidden" name="id-anunciante" value="<%= id_anunciante %>"></input>
                                                 <input type="hidden" name="nro-propiedad" value="<%= nro_propiedad %>"></input>
-                                                <button class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar esta propiedad?')">Eliminar</button>
+                                                <button class="btn btn-danger" onclick="event.stopPropagation(); return confirm('¿Estás seguro de que deseas eliminar esta propiedad?')">Eliminar</button>
                                             </form>
                              	<%
                                         }

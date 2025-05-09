@@ -13,7 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="styles.css">
     <%
-    Cliente cli = (Cliente) request.getAttribute("cliente");
+    Cliente cli = (Cliente) request.getSession().getAttribute("usuario");
     LinkedList<Propiedad> propiedades = (LinkedList<Propiedad>) request.getAttribute("propiedades");
     %>
 </head>

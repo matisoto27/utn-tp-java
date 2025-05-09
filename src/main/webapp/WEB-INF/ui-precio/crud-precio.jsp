@@ -100,7 +100,7 @@
                                             <form method="POST" action="precioservlet?action=delete">
                                                 <input type="hidden" name="id-anunciante" value="<%= id_anunciante %>">
                                                 <input type="hidden" name="nro-propiedad" value="<%= nro_propiedad %>">
-                                                <button class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este precio?')">Eliminar</button>
+                                                <button class="btn btn-danger" onclick="event.stopPropagation(); return confirm('¿Estás seguro de que deseas eliminar este precio?')">Eliminar</button>
                                             </form>
                                         </td>
                                     </tr>

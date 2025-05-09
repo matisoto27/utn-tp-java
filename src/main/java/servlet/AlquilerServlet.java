@@ -29,6 +29,10 @@ public class AlquilerServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String rol = (String) request.getSession().getAttribute("rol");
+		if (rol == null || rol.isEmpty()) {
+			response.sendRedirect("http://localhost:8080/utn-tp-java/");
+			return;
+		}
 		if (!rol.equals("administrador") && !rol.equals("anunciante") && !rol.equals("cliente")) {
 			response.sendRedirect("http://localhost:8080/utn-tp-java/");
 			return;
@@ -214,8 +218,7 @@ public class AlquilerServlet extends HttpServlet {
 					int nro_propiedad = Integer.parseInt(nro_propiedad_str);
 					
 					
-					prop.setAnunciante(anun);
-					prop.setNroPropiedad(nro_propiedad);
+					prop = new Propiedad(anun, nro_propiedad);
 					prop = new PropiedadController().getByIdAnunNroProp(prop);
 					if (prop == null) {
 						mensaje = "No se encontró una propiedad con los datos proporcionados.";
@@ -402,8 +405,7 @@ public class AlquilerServlet extends HttpServlet {
 					int nro_propiedad = Integer.parseInt(nro_propiedad_str);
 					
 					
-					prop.setAnunciante(anun);
-					prop.setNroPropiedad(nro_propiedad);
+					prop = new Propiedad(anun, nro_propiedad);
 					prop = new PropiedadController().getByIdAnunNroProp(prop);
 					if (prop == null) {
 						mensaje = "No se encontró una propiedad con los datos proporcionados.";
@@ -535,8 +537,7 @@ public class AlquilerServlet extends HttpServlet {
 						int nro_propiedad = Integer.parseInt(nro_propiedad_str);
 						
 						
-						prop.setAnunciante(anun);
-						prop.setNroPropiedad(nro_propiedad);
+						prop = new Propiedad(anun, nro_propiedad);
 						prop = new PropiedadController().getByIdAnunNroProp(prop);
 						if (prop == null) {
 							mensaje = "No se encontró una propiedad con los datos proporcionados.";

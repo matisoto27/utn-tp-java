@@ -12,13 +12,11 @@ public class Propiedad {
 	
 	public Propiedad() {}
 	
-	// Delete
 	public Propiedad(Anunciante anunciante, int nro_propiedad) {
         this.anunciante = anunciante;
         this.nro_propiedad = nro_propiedad;
     }
 	
-	// Create
 	public Propiedad(Anunciante anunciante, String direccion, Integer piso, String depto) {
         this.anunciante = anunciante;
         this.direccion = direccion;
@@ -26,7 +24,6 @@ public class Propiedad {
         this.depto = depto;
     }
 	
-	// Update
 	public Propiedad(Anunciante anunciante, int nro_propiedad, String direccion, Integer piso, String depto) {
         this.anunciante = anunciante;
         this.nro_propiedad = nro_propiedad;

@@ -101,7 +101,7 @@
                                         <td>
                                             <form method="POST" action="anuncianteservlet?action=delete">
                                                 <input type="hidden" name="id-anunciante" value="<%= id_anunciante %>"></input>
-                                                <button class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas eliminar este anunciante?')">Eliminar</button>
+                                                <button class="btn btn-danger" onclick="event.stopPropagation(); return confirm('¿Estás seguro de que deseas eliminar este anunciante?')">Eliminar</button>
                                             </form>
                                         </td>
                                     </tr>
