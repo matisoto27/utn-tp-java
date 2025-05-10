@@ -201,7 +201,9 @@ public class AnuncianteServlet extends HttpServlet {
 					int id_anunciante = 0;
 					if (rol.equals("administrador")) {
 						String id_anunciante_str = request.getParameter("id-anunciante");
-						if (id_anunciante_str == null || id_anunciante_str.isEmpty() || !id_anunciante_str.matches("\\d+")) {
+						if (id_anunciante_str == null || id_anunciante_str.isEmpty()) {
+							errores.append("anunciante_vacio,");
+						} else if (!id_anunciante_str.matches("\\d+")) {
 							errores.append("anunciante_invalido,");
 						} else {
 							id_anunciante = Integer.parseInt(id_anunciante_str);
@@ -320,7 +322,9 @@ public class AnuncianteServlet extends HttpServlet {
 					int id_anunciante = 0;
 					if (rol.equals("administrador")) {
 						String id_anunciante_str = request.getParameter("id-anunciante");
-						if (id_anunciante_str == null || id_anunciante_str.isEmpty() || !id_anunciante_str.matches("\\d+")) {
+						if (id_anunciante_str == null || id_anunciante_str.isEmpty()) {
+							errores.append("anunciante_vacio,");
+						} else if (!id_anunciante_str.matches("\\d+")) {
 							errores.append("anunciante_invalido,");
 						} else {
 							id_anunciante = Integer.parseInt(id_anunciante_str);
