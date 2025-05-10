@@ -94,14 +94,25 @@
         if (errores) {
             var listaErrores = errores.split(',');
             var mensajes = {
-                "nombre_invalido": "El nombre solo puede contener letras.",
-                "apellido_invalido": "El apellido solo puede contener letras.",
-                "edad_invalida": "Debe tener al menos 18 años para registrarse.",
-                "email_invalido": "El correo electrónico no tiene un formato válido.",
-                "telefono_invalido": "El teléfono debe tener al menos 10 dígitos numéricos.",
-                "contrasena_invalida": "La contraseña debe tener 8 caracteres.",
-                "contrasenas_no_coinciden": "Las contraseñas no coinciden."
-            };
+                    "nombre_vacio": "El nombre no puede estar vacío.",
+                    "nombre_invalido": "El nombre solo puede contener letras.",
+
+                    "apellido_vacio": "El apellido no puede estar vacío.",
+                    "apellido_invalido": "El apellido solo puede contener letras.",
+
+                    "fecha_vacia": "La fecha de nacimiento no puede estar vacía.",
+                    "edad_invalida": "Debe tener al menos 18 años para registrarse.",
+
+                    "email_vacio": "El correo electrónico no puede estar vacío.",
+                    "email_invalido": "El correo electrónico no tiene un formato válido.",
+
+                    "telefono_vacio": "El teléfono no puede estar vacío.",
+                    "telefono_invalido": "El teléfono debe tener al menos 10 dígitos numéricos.",
+                    
+                    "contrasena_vacia": "La contraseña no puede estar vacía.",
+                    "contrasena_invalida": "La contraseña debe tener al menos 8 caracteres.",
+                    "contrasenas_no_coinciden": "Las contraseñas no coinciden."
+                };
             var message = listaErrores.map(function (error) {
                 return mensajes[error];
             }).join('<br>');

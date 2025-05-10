@@ -11,7 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="styles.css">
     <%
-        Cliente cliente = (Cliente) request.getAttribute("respuestas");
+        Cliente cliente = (Cliente) request.getAttribute("respuestas_correctas");
         String dni = (cliente != null && cliente.getDni() != null) ? cliente.getDni() : "";
         String nombre = (cliente != null && cliente.getNombre() != null) ? cliente.getNombre() : "";
         String apellido = (cliente != null && cliente.getApellido() != null) ? cliente.getApellido() : "";
@@ -95,14 +95,27 @@
             if (errores) {
                 var listaErrores = errores.split(',');
                 var mensajes = {
+                    "dni_vacio": "El DNI no puede estar vacío.",
                     "dni_invalido": "El DNI debe tener 8 dígitos numéricos.",
                     "dni_unico": "Ya existe un cliente con ese DNI.",
+
+                    "nombre_vacio": "El nombre no puede estar vacío.",
                     "nombre_invalido": "El nombre solo puede contener letras.",
+
+                    "apellido_vacio": "El apellido no puede estar vacío.",
                     "apellido_invalido": "El apellido solo puede contener letras.",
+
+                    "fecha_vacia": "La fecha de nacimiento no puede estar vacía.",
                     "edad_invalida": "Debe tener al menos 18 años para registrarse.",
+
+                    "email_vacio": "El correo electrónico no puede estar vacío.",
                     "email_invalido": "El correo electrónico no tiene un formato válido.",
+
+                    "telefono_vacio": "El teléfono no puede estar vacío.",
                     "telefono_invalido": "El teléfono debe tener al menos 10 dígitos numéricos.",
-                    "contrasena_invalida": "La contraseña debe tener 8 caracteres.",
+                    
+                    "contrasena_vacia": "La contraseña no puede estar vacía.",
+                    "contrasena_invalida": "La contraseña debe tener al menos 8 caracteres.",
                     "contrasenas_no_coinciden": "Las contraseñas no coinciden."
                 };
                 var message = listaErrores.map(function (error) {

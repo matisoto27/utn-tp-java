@@ -44,7 +44,9 @@
                 }
                 %>
                 <a href="clienteservlet?action=update" class="list-group-item list-group-item-action mb-3">Actualizar mi perfil</a>
-                <a href="clienteservlet?action=delete" class="list-group-item list-group-item-action mb-3" onclick="return confirm('¿Estás seguro de que deseas eliminar tu cuenta?')">Eliminar mi cuenta</a>
+                <form action="clienteservlet?action=delete" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu cuenta?')">
+                    <button type="submit" class="list-group-item list-group-item-action mb-3">Eliminar mi cuenta</button>
+                </form>
                 <a href="logout" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>
             </div>
         </div>

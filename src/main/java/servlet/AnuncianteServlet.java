@@ -22,8 +22,12 @@ public class AnuncianteServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String rol = (String) request.getSession().getAttribute("rol");
-		if (!rol.equals("administrador") && !rol.equals("anunciante") && !rol.equals("cliente")) {
+		if (rol == null || rol.isEmpty()) {
 			response.sendRedirect("http://localhost:8080/utn-tp-java/");
+			return;
+		}
+		if (!rol.equals("administrador") && !rol.equals("anunciante") && !rol.equals("cliente")) {
+			request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
 			return;
 		}
 		Anunciante anun = new Anunciante();
