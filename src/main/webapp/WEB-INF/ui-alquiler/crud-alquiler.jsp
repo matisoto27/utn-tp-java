@@ -169,18 +169,23 @@
                                         <td><%= fecha_renuncia != null ? fecha_renuncia : "-" %></td>
                                         <td><%= !puntuacion.isEmpty() ? puntuacion : "-" %></td>
                                         <td><%= !comentario.isEmpty() ? comentario : "-" %></td>
-                                        <td>
+                                        
                                 <%          
-                                        if (estado == null || !estado.equals("En curso")) {
+                                        if (estado != null && !estado.equals("En curso")) {
                              	%>
-                                            <form method="POST" action="alquilerservlet?action=delete">
-                                                <input type="hidden" name="id-alquiler" value="<%= id_alquiler %>"></input>
-                                                <button class="btn btn-danger" onclick="event.stopPropagation(); return confirm('¿Estás seguro de que deseas eliminar este alquiler?')">Eliminar</button>
-                                            </form>
+                                            <td>
+                                                <form method="POST" action="alquilerservlet?action=delete">
+                                                    <input type="hidden" name="id-alquiler" value="<%= id_alquiler %>"></input>
+                                                    <button class="btn btn-danger" onclick="event.stopPropagation(); return confirm('¿Estás seguro de que deseas eliminar este alquiler?')">Eliminar</button>
+                                                </form>
+                                            </td>
                              	<%
+                                        } else {
+                                %>
+                                            <td>-</td>
+                                <%
                                         }
                                 %>
-                                        </td>
                                     </tr>
                                 <%
                                     }

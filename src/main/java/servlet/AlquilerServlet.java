@@ -3,6 +3,7 @@ package servlet;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.LinkedList;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -167,7 +168,6 @@ public class AlquilerServlet extends HttpServlet {
 					Anunciante anun = new Anunciante();
 					Cliente cli = new Cliente();
 					ClienteController cc = new ClienteController();
-					Propiedad prop = new Propiedad();
 					String id_anunciante_str = request.getParameter("id-anunciante");
 					String nro_propiedad_str = request.getParameter("nro-propiedad");
 					
@@ -193,32 +193,50 @@ public class AlquilerServlet extends HttpServlet {
 			        }
 			        
 			        
-					if (id_anunciante_str == null || id_anunciante_str.isEmpty() || !id_anunciante_str.matches("\\d+")) {
-						mensaje = "El id del anunciante debe ser un número.";
+			        if (id_anunciante_str == null || id_anunciante_str.isEmpty()) {
+		        		mensaje = "El ID del anunciante no puede estar vacío.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+		        	}
+			        
+			        
+			        int id_anunciante = 0;
+					try {
+						id_anunciante = Integer.parseInt(id_anunciante_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
-					int id_anunciante = Integer.parseInt(id_anunciante_str);
 					
 					
-					anun.setIdAnunciante(id_anunciante);
-					anun = new AnuncianteController().getById(anun);
-					if (anun == null) {
-						mensaje = "No se encontró un anunciante con el id proporcionado.";
+		        	anun.setIdAnunciante(id_anunciante);
+		        	anun = new AnuncianteController().getById(anun);
+		        	if (anun == null) {
+						mensaje = "No se encontró un anunciante con el ID proporcionado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+		        	
+		        	
+					if (nro_propiedad_str == null || nro_propiedad_str.isEmpty()) {
+						mensaje = "El número de propiedad no puede estar vacío.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
 					
 					
-					if (nro_propiedad_str == null || nro_propiedad_str.isEmpty() || !nro_propiedad_str.matches("\\d+")) {
-						mensaje = "El número de propiedad debe ser un número.";
+					int nro_propiedad = 0;
+					try {
+					    nro_propiedad = Integer.parseInt(nro_propiedad_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
-					int nro_propiedad = Integer.parseInt(nro_propiedad_str);
 					
 					
-					prop = new Propiedad(anun, nro_propiedad);
+					Propiedad prop = new Propiedad(anun, nro_propiedad);
 					prop = new PropiedadController().getByIdAnunNroProp(prop);
 					if (prop == null) {
 						mensaje = "No se encontró una propiedad con los datos proporcionados.";
@@ -228,7 +246,7 @@ public class AlquilerServlet extends HttpServlet {
 					
 					
 					if (cc.tieneAlquiler(cli)) {
-						mensaje = "Actualmente tienes una reserva activa para visitar una propiedad.";
+						mensaje = "Ya tienes un alquiler pendiente o en curso.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
@@ -244,9 +262,6 @@ public class AlquilerServlet extends HttpServlet {
 						String fecha_inicio_str = request.getParameter("fecha-inicio-contrato");
 						String fecha_fin_str = request.getParameter("fecha-fin-contrato");
 						String fecha_renuncia_str = request.getParameter("fecha-renuncia");
-						LocalDate fecha_inicio_contrato = fecha_inicio_str == null || fecha_inicio_str.isEmpty() ? null : LocalDate.parse(fecha_inicio_str, dtf);
-						LocalDate fecha_fin_contrato = fecha_fin_str == null || fecha_fin_str.isEmpty() ? null : LocalDate.parse(fecha_fin_str, dtf);
-						LocalDate fecha_renuncia = fecha_renuncia_str == null || fecha_renuncia_str.isEmpty() ? null : LocalDate.parse(fecha_renuncia_str, dtf);
 						String puntuacion_str = request.getParameter("puntuacion");
 						String comentario_str = request.getParameter("comentario");
 						String comentario = comentario_str == null || comentario_str.isEmpty() ? null : comentario_str;
@@ -257,7 +272,16 @@ public class AlquilerServlet extends HttpServlet {
 					        redirigirConMensaje(request, response, rol, mensaje);
 					        return;
 					    }
-						LocalDate fecha_solicitado = LocalDate.parse(fecha_solicitado_str, dtf);
+						
+						
+						LocalDate fecha_solicitado = null;
+						try {
+							fecha_solicitado = LocalDate.parse(fecha_solicitado_str, dtf);
+						} catch (DateTimeParseException e) {
+							mensaje = "La fecha de solicitud no tiene un formato válido.";
+							redirigirConMensaje(request, response, rol, mensaje);
+							return;
+						}
 						
 						
 						if (estado == null || estado.isEmpty()) {
@@ -274,25 +298,70 @@ public class AlquilerServlet extends HttpServlet {
 						}
 						
 						
-						if (fecha_inicio_contrato != null && fecha_fin_contrato != null && fecha_fin_contrato.isBefore(fecha_inicio_contrato)) {
-						    mensaje = "La fecha de fin de contrato no puede ser anterior a la fecha de inicio.";
+						LocalDate fecha_inicio_contrato = null;
+						try {
+							if (fecha_inicio_str != null && !fecha_inicio_str.isEmpty()) {
+								fecha_inicio_contrato = LocalDate.parse(fecha_inicio_str, dtf);
+							}
+						} catch (DateTimeParseException e) {
+							mensaje = "La fecha de inicio del contrato no tiene un formato válido.";
+							redirigirConMensaje(request, response, rol, mensaje);
+							return;
+						}
+						
+						
+						if (fecha_inicio_contrato != null && fecha_inicio_contrato.isBefore(alq.getFechaSolicitado())) {
+						    mensaje = "La fecha de inicio del contrato no puede ser anterior a la fecha de solicitud.";
 						    redirigirConMensaje(request, response, rol, mensaje);
 						    return;
 						}
 						
 						
-						if (puntuacion_str != null && !puntuacion_str.isEmpty() && !puntuacion_str.matches("\\d+")) {
-					        mensaje = "La puntuación debe ser un número.";
-					        redirigirConMensaje(request, response, rol, mensaje);
-					        return;
-					    }
-						Integer puntuacion = puntuacion_str == null || puntuacion_str.isEmpty() ? null : Integer.parseInt(puntuacion_str);
+						LocalDate fecha_fin_contrato = null;
+						try {
+							if (fecha_fin_str != null && !fecha_fin_str.isEmpty()) {
+								fecha_fin_contrato = LocalDate.parse(fecha_fin_str, dtf);
+							}
+						} catch (DateTimeParseException e) {
+							mensaje = "La fecha de fin del contrato no tiene un formato válido.";
+							redirigirConMensaje(request, response, rol, mensaje);
+							return;
+						}
 						
 						
-						if (puntuacion != null && (puntuacion < 1 || puntuacion > 10)) {
-						    mensaje = "La puntuación debe estar entre 1 y 10.";
+						if (fecha_inicio_contrato != null && fecha_fin_contrato != null && !fecha_inicio_contrato.isBefore(fecha_fin_contrato)) {
+							mensaje = "La fecha de inicio del contrato debe ser anterior a la fecha de fin.";
 						    redirigirConMensaje(request, response, rol, mensaje);
 						    return;
+						}
+						
+						
+						LocalDate fecha_renuncia = null;
+						try {
+							if (fecha_renuncia_str != null && !fecha_renuncia_str.isEmpty()) {
+								fecha_renuncia = LocalDate.parse(fecha_renuncia_str, dtf);
+							}
+						} catch (DateTimeParseException e) {
+							mensaje = "La fecha de renuncia no tiene un formato válido.";
+							redirigirConMensaje(request, response, rol, mensaje);
+							return;
+						}
+						
+						
+						Integer puntuacion = null;
+						try {
+							if (puntuacion_str != null && !puntuacion_str.isEmpty()) {
+						        puntuacion = Integer.parseInt(puntuacion_str);
+						        if (puntuacion < 1 || puntuacion > 10) {
+						        	mensaje = "La puntuación debe estar entre 1 y 10.";
+								    redirigirConMensaje(request, response, rol, mensaje);
+								    return;
+						        }
+						    }
+						} catch (NumberFormatException e) {
+							mensaje = "Se ha producido un error inesperado.";
+							redirigirConMensaje(request, response, rol, mensaje);
+							return;
 						}
 						
 						
@@ -329,7 +398,6 @@ public class AlquilerServlet extends HttpServlet {
 					
 					Anunciante anun = new Anunciante();
 					Cliente cli = new Cliente();
-					Propiedad prop = new Propiedad();
 					String id_alquiler_str = request.getParameter("id-alquiler");
 					String dni_cliente = request.getParameter("dni-cliente");
 					String id_anunciante_str = request.getParameter("id-anunciante");
@@ -339,26 +407,32 @@ public class AlquilerServlet extends HttpServlet {
 					String fecha_inicio_str = request.getParameter("fecha-inicio-contrato");
 					String fecha_fin_str = request.getParameter("fecha-fin-contrato");
 					String fecha_renuncia_str = request.getParameter("fecha-renuncia");
-					LocalDate fecha_inicio_contrato = fecha_inicio_str == null || fecha_inicio_str.isEmpty() ? null : LocalDate.parse(fecha_inicio_str, dtf);
-					LocalDate fecha_fin_contrato = fecha_fin_str == null || fecha_fin_str.isEmpty() ? null : LocalDate.parse(fecha_fin_str, dtf);
-					LocalDate fecha_renuncia = fecha_renuncia_str == null || fecha_renuncia_str.isEmpty() ? null : LocalDate.parse(fecha_renuncia_str, dtf);
 					String puntuacion_str = request.getParameter("puntuacion");
 					String comentario_str = request.getParameter("comentario");
 					String comentario = comentario_str == null || comentario_str.isEmpty() ? null : comentario_str;
 					
 					
-					if (id_alquiler_str == null || id_alquiler_str.isEmpty() || !id_alquiler_str.matches("\\d+")) {
-						mensaje = "El id del alquiler debe ser un número.";
+					if (id_alquiler_str == null || id_alquiler_str.isEmpty()) {
+						mensaje = "El ID del alquiler no puede estar vacío.";
 				        redirigirConMensaje(request, response, rol, mensaje);
 				        return;
 				    }
-					int id_alquiler = Integer.parseInt(id_alquiler_str);
+					
+					
+					int id_alquiler = 0;
+					try {
+						id_alquiler = Integer.parseInt(id_alquiler_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
 					
 					
 					alq.setIdAlquiler(id_alquiler);
 					alq = ac.getById(alq);
 					if (alq == null) {
-						mensaje = "No se encontró un alquiler con el id proporcionado.";
+						mensaje = "No se encontró un alquiler con el ID proporcionado.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
@@ -380,32 +454,50 @@ public class AlquilerServlet extends HttpServlet {
 					}
 		        	
 		        	
-		        	if (id_anunciante_str == null || id_anunciante_str.isEmpty() || !id_anunciante_str.matches("\\d+")) {
-						mensaje = "El id del anunciante debe ser un número.";
+		        	if (id_anunciante_str == null || id_anunciante_str.isEmpty()) {
+		        		mensaje = "El ID del anunciante no puede estar vacío.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+		        	}
+			        
+			        
+			        int id_anunciante = 0;
+					try {
+						id_anunciante = Integer.parseInt(id_anunciante_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
-					int id_anunciante = Integer.parseInt(id_anunciante_str);
 					
 					
 					anun.setIdAnunciante(id_anunciante);
 					anun = new AnuncianteController().getById(anun);
 					if (anun == null) {
-						mensaje = "No se encontró un anunciante con el id proporcionado.";
+						mensaje = "No se encontró un anunciante con el ID proporcionado.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
 					
 					
-					if (nro_propiedad_str == null || nro_propiedad_str.isEmpty() || !nro_propiedad_str.matches("\\d+")) {
-						mensaje = "El número de propiedad debe ser un número.";
+					if (nro_propiedad_str == null || nro_propiedad_str.isEmpty()) {
+						mensaje = "El número de propiedad no puede estar vacío.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
-					int nro_propiedad = Integer.parseInt(nro_propiedad_str);
 					
 					
-					prop = new Propiedad(anun, nro_propiedad);
+					int nro_propiedad = 0;
+					try {
+					    nro_propiedad = Integer.parseInt(nro_propiedad_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					Propiedad prop = new Propiedad(anun, nro_propiedad);
 					prop = new PropiedadController().getByIdAnunNroProp(prop);
 					if (prop == null) {
 						mensaje = "No se encontró una propiedad con los datos proporcionados.";
@@ -419,7 +511,16 @@ public class AlquilerServlet extends HttpServlet {
 				        redirigirConMensaje(request, response, rol, mensaje);
 				        return;
 				    }
-					LocalDate fecha_solicitado = LocalDate.parse(fecha_solicitado_str, dtf);
+					
+					
+					LocalDate fecha_solicitado = null;
+					try {
+						fecha_solicitado = LocalDate.parse(fecha_solicitado_str, dtf);
+					} catch (DateTimeParseException e) {
+						mensaje = "La fecha de solicitud no tiene un formato válido.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
 					
 					
 					if (estado == null || estado.isEmpty()) {
@@ -436,25 +537,70 @@ public class AlquilerServlet extends HttpServlet {
 					}
 					
 					
-					if (fecha_inicio_contrato != null && fecha_fin_contrato != null && fecha_fin_contrato.isBefore(fecha_inicio_contrato)) {
-					    mensaje = "La fecha de fin de contrato no puede ser anterior a la fecha de inicio.";
+					LocalDate fecha_inicio_contrato = null;
+					try {
+						if (fecha_inicio_str != null && !fecha_inicio_str.isEmpty()) {
+							fecha_inicio_contrato = LocalDate.parse(fecha_inicio_str, dtf);
+						}
+					} catch (DateTimeParseException e) {
+						mensaje = "La fecha de inicio del contrato no tiene un formato válido.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					if (fecha_inicio_contrato != null && fecha_inicio_contrato.isBefore(alq.getFechaSolicitado())) {
+					    mensaje = "La fecha de inicio del contrato no puede ser anterior a la fecha de solicitud.";
 					    redirigirConMensaje(request, response, rol, mensaje);
 					    return;
 					}
 					
 					
-					if (puntuacion_str != null && !puntuacion_str.isEmpty() && !puntuacion_str.matches("\\d+")) {
-				        mensaje = "La puntuación debe ser un número.";
-				        redirigirConMensaje(request, response, rol, mensaje);
-				        return;
-				    }
-					Integer puntuacion = puntuacion_str == null || puntuacion_str.isEmpty() ? null : Integer.parseInt(puntuacion_str);
+					LocalDate fecha_fin_contrato = null;
+					try {
+						if (fecha_fin_str != null && !fecha_fin_str.isEmpty()) {
+							fecha_fin_contrato = LocalDate.parse(fecha_fin_str, dtf);
+						}
+					} catch (DateTimeParseException e) {
+						mensaje = "La fecha de fin del contrato no tiene un formato válido.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
 					
 					
-					if (puntuacion != null && (puntuacion < 1 || puntuacion > 10)) {
-					    mensaje = "La puntuación debe estar entre 1 y 10.";
+					if (fecha_inicio_contrato != null && fecha_fin_contrato != null && !fecha_inicio_contrato.isBefore(fecha_fin_contrato)) {
+						mensaje = "La fecha de inicio del contrato debe ser anterior a la fecha de fin.";
 					    redirigirConMensaje(request, response, rol, mensaje);
 					    return;
+					}
+					
+					
+					LocalDate fecha_renuncia = null;
+					try {
+						if (fecha_renuncia_str != null && !fecha_renuncia_str.isEmpty()) {
+							fecha_renuncia = LocalDate.parse(fecha_renuncia_str, dtf);
+						}
+					} catch (DateTimeParseException e) {
+						mensaje = "La fecha de renuncia no tiene un formato válido.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					Integer puntuacion = null;
+					try {
+						if (puntuacion_str != null && !puntuacion_str.isEmpty()) {
+					        puntuacion = Integer.parseInt(puntuacion_str);
+					        if (puntuacion < 1 || puntuacion > 10) {
+					        	mensaje = "La puntuación debe estar entre 1 y 10.";
+							    redirigirConMensaje(request, response, rol, mensaje);
+							    return;
+					        }
+					    }
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
 					}
 					
 					
@@ -476,27 +622,34 @@ public class AlquilerServlet extends HttpServlet {
 					
 					if (rol.equals("administrador")) {
 						String id_alquiler_str = request.getParameter("id-alquiler");
-						
-						
-						if (id_alquiler_str == null || id_alquiler_str.isEmpty() || !id_alquiler_str.matches("\\d+")) {
-							mensaje = "El id del alquiler debe ser un número.";
+						if (id_alquiler_str == null || id_alquiler_str.isEmpty()) {
+							mensaje = "El ID del alquiler no puede estar vacío.";
 					        redirigirConMensaje(request, response, rol, mensaje);
 					        return;
 					    }
-						int id_alquiler = Integer.parseInt(id_alquiler_str);
 						
 						
-						alq.setIdAlquiler(id_alquiler);
-						alq = ac.getById(alq);
-						if (alq == null) {
-							mensaje = "No se encontró un alquiler con el id proporcionado.";
+						int id_alquiler = 0;
+						try {
+							id_alquiler = Integer.parseInt(id_alquiler_str);
+						} catch (NumberFormatException e) {
+							mensaje = "Se ha producido un error inesperado.";
 							redirigirConMensaje(request, response, rol, mensaje);
 							return;
 						}
 						
 						
-						if (alq.getEstado() != null && (alq.getEstado().equals("Pendiente") || alq.getEstado().equals("En curso"))) {
-							mensaje = "No puedes eliminar este alquiler debido a que está pendiente o en curso. Por favor, cancele el alquiler y vuelva a intentarlo.";
+						alq.setIdAlquiler(id_alquiler);
+						alq = ac.getById(alq);
+						if (alq == null) {
+							mensaje = "No se encontró un alquiler con el ID proporcionado.";
+							redirigirConMensaje(request, response, rol, mensaje);
+							return;
+						}
+						
+						
+						if (alq.getEstado() != null && alq.getEstado().equals("En curso")) {
+							mensaje = "No puedes eliminar este alquiler debido a que está en curso. Por favor, cancele el alquiler y vuelva a intentarlo.";
 						} else {
 							mensaje = "Alquiler eliminado con éxito.";
 							ac.delete(alq);
@@ -507,37 +660,54 @@ public class AlquilerServlet extends HttpServlet {
 					} else {
 						Anunciante anun = new Anunciante();
 						Cliente cli = (Cliente) request.getSession().getAttribute("usuario");
-						Propiedad prop = new Propiedad();
 						String id_anunciante_str = request.getParameter("id-anunciante");
 						String nro_propiedad_str = request.getParameter("nro-propiedad");
 						
 						
-						if (id_anunciante_str == null || id_anunciante_str.isEmpty() || !id_anunciante_str.matches("\\d+")) {
-							mensaje = "El id del anunciante debe ser un número.";
+						if (id_anunciante_str == null || id_anunciante_str.isEmpty()) {
+			        		mensaje = "El ID del anunciante no puede estar vacío.";
+							redirigirConMensaje(request, response, rol, mensaje);
+							return;
+			        	}
+				        
+				        
+				        int id_anunciante = 0;
+						try {
+							id_anunciante = Integer.parseInt(id_anunciante_str);
+						} catch (NumberFormatException e) {
+							mensaje = "Se ha producido un error inesperado.";
 							redirigirConMensaje(request, response, rol, mensaje);
 							return;
 						}
-						int id_anunciante = Integer.parseInt(id_anunciante_str);
 						
 						
 						anun.setIdAnunciante(id_anunciante);
 						anun = new AnuncianteController().getById(anun);
 						if (anun == null) {
-							mensaje = "No se encontró un anunciante con el id proporcionado.";
+							mensaje = "No se encontró un anunciante con el ID proporcionado.";
 							redirigirConMensaje(request, response, rol, mensaje);
 							return;
 						}
 						
 						
-						if (nro_propiedad_str == null || nro_propiedad_str.isEmpty() || !nro_propiedad_str.matches("\\d+")) {
-							mensaje = "El número de propiedad debe ser un número.";
+						if (nro_propiedad_str == null || nro_propiedad_str.isEmpty()) {
+							mensaje = "El número de propiedad no puede estar vacío.";
 							redirigirConMensaje(request, response, rol, mensaje);
 							return;
 						}
-						int nro_propiedad = Integer.parseInt(nro_propiedad_str);
 						
 						
-						prop = new Propiedad(anun, nro_propiedad);
+						int nro_propiedad = 0;
+						try {
+						    nro_propiedad = Integer.parseInt(nro_propiedad_str);
+						} catch (NumberFormatException e) {
+							mensaje = "Se ha producido un error inesperado.";
+							redirigirConMensaje(request, response, rol, mensaje);
+							return;
+						}
+						
+						
+						Propiedad prop = new Propiedad(anun, nro_propiedad);
 						prop = new PropiedadController().getByIdAnunNroProp(prop);
 						if (prop == null) {
 							mensaje = "No se encontró una propiedad con los datos proporcionados.";
@@ -568,40 +738,78 @@ public class AlquilerServlet extends HttpServlet {
 					String fecha_fin_str = request.getParameter("fecha-fin-contrato");
 					
 					
-					if (id_alquiler_str == null || id_alquiler_str.isEmpty() || !id_alquiler_str.matches("\\d+")) {
-						mensaje = "El id del alquiler debe ser un número.";
+					if (id_alquiler_str == null || id_alquiler_str.isEmpty()) {
+						mensaje = "El ID del alquiler no puede estar vacío.";
 				        redirigirConMensaje(request, response, rol, mensaje);
 				        return;
 				    }
-					int id_alquiler = Integer.parseInt(id_alquiler_str);
 					
+					
+					int id_alquiler = 0;
+					try {
+						id_alquiler = Integer.parseInt(id_alquiler_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					alq.setIdAlquiler(id_alquiler);
+					alq = ac.getById(alq);
+					if (alq == null) {
+						mensaje = "No se encontró un alquiler con el ID proporcionado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
 					
 					if (fecha_inicio_str == null || fecha_inicio_str.isEmpty() || fecha_fin_str == null || fecha_fin_str.isEmpty()) {
 						mensaje = "Por favor, ingrese una fecha de inicio y una fecha de fin.";
 						redirigirConMensaje(request, response, rol, mensaje);
 				        return;
 					}
-					LocalDate fecha_inicio_contrato = LocalDate.parse(fecha_inicio_str, dtf);
-            		LocalDate fecha_fin_contrato = LocalDate.parse(fecha_fin_str, dtf);
-            		
-            		
-            		boolean fechas_invalidas = !fecha_inicio_contrato.isBefore(fecha_fin_contrato) || fecha_inicio_contrato.isBefore(LocalDate.now()) || fecha_fin_contrato.isBefore(LocalDate.now()) || fecha_inicio_contrato.isEqual(fecha_fin_contrato);
-            		if (fechas_invalidas) {
-            			mensaje = "La fecha de inicio debe ser menor que la fecha de fin del contrato.";
-            			redirigirConMensaje(request, response, rol, mensaje);
-				        return;
-            		}
-            		
-            		
-            		alq.setIdAlquiler(id_alquiler);
-					alq = ac.getById(alq);
-					if (alq == null) {
-						mensaje = "No se encontró un alquiler con el id proporcionado.";
+					
+					
+					LocalDate fecha_inicio_contrato = null;
+					try {
+						fecha_inicio_contrato = LocalDate.parse(fecha_inicio_str, dtf);
+					} catch (DateTimeParseException e) {
+						mensaje = "La fecha de inicio del contrato no tiene un formato válido.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
 					
 					
+					if (fecha_inicio_contrato != null && fecha_inicio_contrato.isBefore(alq.getFechaSolicitado())) {
+					    mensaje = "La fecha de inicio del contrato no puede ser anterior a la fecha de solicitud.";
+					    redirigirConMensaje(request, response, rol, mensaje);
+					    return;
+					}
+					
+					LocalDate fecha_fin_contrato = null;
+					try {
+						fecha_fin_contrato = LocalDate.parse(fecha_fin_str, dtf);
+					} catch (DateTimeParseException e) {
+						mensaje = "La fecha de fin del contrato no tiene un formato válido.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					if (fecha_inicio_contrato.isBefore(LocalDate.now()) || fecha_fin_contrato.isBefore(LocalDate.now())) {
+            			mensaje = "Las fechas no pueden ser anteriores a la fecha de hoy.";
+            			redirigirConMensaje(request, response, rol, mensaje);
+				        return;
+            		}
+					
+					
+            		if (!fecha_inicio_contrato.isBefore(fecha_fin_contrato)) {
+            			mensaje = "La fecha de inicio del contrato debe ser anterior a la fecha de fin.";
+            			redirigirConMensaje(request, response, rol, mensaje);
+				        return;
+            		}
+            		
+            		
         			alq.setEstado("En curso");
 					alq.setFechaInicioContrato(fecha_inicio_contrato);
 					alq.setFechaFinContrato(fecha_fin_contrato);
@@ -621,20 +829,27 @@ public class AlquilerServlet extends HttpServlet {
 					
 					
 					String id_alquiler_str = request.getParameter("id-alquiler");
-					
-					
-					if (id_alquiler_str == null || id_alquiler_str.isEmpty() || !id_alquiler_str.matches("\\d+")) {
-						mensaje = "El id del alquiler debe ser un número.";
+					if (id_alquiler_str == null || id_alquiler_str.isEmpty()) {
+						mensaje = "El ID del alquiler no puede estar vacío.";
 				        redirigirConMensaje(request, response, rol, mensaje);
 				        return;
 				    }
-					int id_alquiler = Integer.parseInt(id_alquiler_str);
+					
+					
+					int id_alquiler = 0;
+					try {
+						id_alquiler = Integer.parseInt(id_alquiler_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
 					
 					
 					alq.setIdAlquiler(id_alquiler);
 					alq = ac.getById(alq);
 					if (alq == null) {
-						mensaje = "No se encontró un alquiler con el id proporcionado.";
+						mensaje = "No se encontró un alquiler con el ID proporcionado.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
@@ -670,18 +885,27 @@ public class AlquilerServlet extends HttpServlet {
 					String comentario = comentario_str == null || comentario_str.isEmpty() ? null : comentario_str;
 					
 					
-					if (id_alquiler_str == null || id_alquiler_str.isEmpty() || !id_alquiler_str.matches("\\d+")) {
-						mensaje = "El id del alquiler debe ser un número.";
+					if (id_alquiler_str == null || id_alquiler_str.isEmpty()) {
+						mensaje = "El ID del alquiler no puede estar vacío.";
 				        redirigirConMensaje(request, response, rol, mensaje);
 				        return;
 				    }
-					int id_alquiler = Integer.parseInt(id_alquiler_str);
+					
+					
+					int id_alquiler = 0;
+					try {
+						id_alquiler = Integer.parseInt(id_alquiler_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
 					
 					
 					alq.setIdAlquiler(id_alquiler);
 					alq = ac.getById(alq);
 					if (alq == null) {
-						mensaje = "No se encontró un alquiler con el id proporcionado.";
+						mensaje = "No se encontró un alquiler con el ID proporcionado.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
@@ -694,18 +918,20 @@ public class AlquilerServlet extends HttpServlet {
 					}
 					
 					
-					if (puntuacion_str != null && !puntuacion_str.isEmpty() && !puntuacion_str.matches("\\d+")) {
-				        mensaje = "La puntuación debe ser un número.";
-				        redirigirConMensaje(request, response, rol, mensaje);
-				        return;
-				    }
-					Integer puntuacion = Integer.parseInt(puntuacion_str);
-					
-					
-					if (puntuacion < 1 || puntuacion > 10) {
-					    mensaje = "La puntuación debe estar entre 1 y 10.";
-					    redirigirConMensaje(request, response, rol, mensaje);
-					    return;
+					Integer puntuacion = null;
+					try {
+						if (puntuacion_str != null && !puntuacion_str.isEmpty()) {
+					        puntuacion = Integer.parseInt(puntuacion_str);
+					        if (puntuacion < 1 || puntuacion > 10) {
+					        	mensaje = "La puntuación debe estar entre 1 y 10.";
+							    redirigirConMensaje(request, response, rol, mensaje);
+							    return;
+					        }
+					    }
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
 					}
 					
 					
@@ -726,20 +952,27 @@ public class AlquilerServlet extends HttpServlet {
 					
 					
 					String id_alquiler_str = request.getParameter("id-alquiler");
-					
-					
-					if (id_alquiler_str == null || id_alquiler_str.isEmpty() || !id_alquiler_str.matches("\\d+")) {
-						mensaje = "El id del alquiler debe ser un número.";
+					if (id_alquiler_str == null || id_alquiler_str.isEmpty()) {
+						mensaje = "El ID del alquiler no puede estar vacío.";
 				        redirigirConMensaje(request, response, rol, mensaje);
 				        return;
 				    }
-					int id_alquiler = Integer.parseInt(id_alquiler_str);
+					
+					
+					int id_alquiler = 0;
+					try {
+						id_alquiler = Integer.parseInt(id_alquiler_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
 					
 					
 					alq.setIdAlquiler(id_alquiler);
 					alq = ac.getById(alq);
 					if (alq == null) {
-						mensaje = "No se encontró un alquiler con el id proporcionado.";
+						mensaje = "No se encontró un alquiler con el ID proporcionado.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
@@ -752,11 +985,9 @@ public class AlquilerServlet extends HttpServlet {
 					}
 					
 					
-					//
 					if (alq.getPuntuacion() == 0) {
 						alq.setPuntuacion(null);
 					}
-					//
 					
 					
 					alq.setEstado("Finalizado");

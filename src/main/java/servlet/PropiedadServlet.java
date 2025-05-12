@@ -123,18 +123,27 @@ public class PropiedadServlet extends HttpServlet {
 			
 			if (rol.equals("administrador")) {
 	        	String id_anunciante_str = request.getParameter("id-anunciante");
-	        	if (id_anunciante_str == null || id_anunciante_str.isEmpty() || !id_anunciante_str.matches("\\d+")) {
-	        		mensaje = "El id del anunciante debe ser un número.";
+	        	if (id_anunciante_str == null || id_anunciante_str.isEmpty()) {
+	        		mensaje = "El ID del anunciante no puede estar vacío.";
 					redirigirConMensaje(request, response, rol, mensaje);
 					return;
 	        	}
-	        	int id_anunciante = Integer.parseInt(id_anunciante_str);
 	        	
 	        	
+	        	int id_anunciante = 0;
+				try {
+					id_anunciante = Integer.parseInt(id_anunciante_str);
+				} catch (NumberFormatException e) {
+					mensaje = "Se ha producido un error inesperado.";
+					redirigirConMensaje(request, response, rol, mensaje);
+					return;
+				}
+				
+				
 	        	anun.setIdAnunciante(id_anunciante);
 	        	anun = ac.getById(anun);
 	        	if (anun == null) {
-					mensaje = "No se encontró un anunciante con el id proporcionado.";
+					mensaje = "No se encontró un anunciante con el ID proporcionado.";
 					redirigirConMensaje(request, response, rol, mensaje);
 					return;
 				}
@@ -165,21 +174,23 @@ public class PropiedadServlet extends HttpServlet {
 			        }
 			        
 			        
-			        if (piso_str != null && !piso_str.isEmpty() && !piso_str.matches("\\d+")) {
-				        mensaje = "El piso debe ser un número.";
+			        Integer piso = null;
+			        try {
+			        	if (piso_str != null && !piso_str.isEmpty()) {
+					        piso = Integer.parseInt(piso_str);
+					        if (piso < 0) {
+					        	mensaje = "El piso debe ser un número igual o mayor que 0.";
+							    redirigirConMensaje(request, response, rol, mensaje);
+							    return;
+					        }
+					    }
+			        } catch (NumberFormatException e) {
+			        	mensaje = "Se ha producido un error inesperado.";
 				        redirigirConMensaje(request, response, rol, mensaje);
 				        return;
-				    }
-					Integer piso = piso_str == null || piso_str.isEmpty() ? null : Integer.parseInt(piso_str);
-					
-					
-					if (piso != null && piso < 0) {
-					    mensaje = "El piso debe ser un número igual o mayor que 0.";
-					    redirigirConMensaje(request, response, rol, mensaje);
-					    return;
-					}
-					
-					
+			        }
+			        
+			        
 					if (depto != null && !depto.matches("[a-zA-Z0-9]*")) {
 			        	mensaje = "El departamento solo puede contener letras y números.";
 			        	redirigirConMensaje(request, response, rol, mensaje);
@@ -203,12 +214,21 @@ public class PropiedadServlet extends HttpServlet {
 			        String depto = depto_str == null || depto_str.isEmpty() ? null : depto_str;
 			        
 			        
-					if (nro_propiedad_str == null || nro_propiedad_str.isEmpty() || !nro_propiedad_str.matches("\\d+")) {
-						mensaje = "El número de propiedad debe ser un número.";
+			        if (nro_propiedad_str == null || nro_propiedad_str.isEmpty()) {
+						mensaje = "El número de propiedad no puede estar vacío.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
-					int nro_propiedad = Integer.parseInt(nro_propiedad_str);
+					
+					
+					int nro_propiedad = 0;
+					try {
+					    nro_propiedad = Integer.parseInt(nro_propiedad_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
 					
 					
 					prop = new Propiedad(anun, nro_propiedad);
@@ -234,19 +254,21 @@ public class PropiedadServlet extends HttpServlet {
 			        }
 			        
 			        
-			        if (piso_str != null && !piso_str.isEmpty() && !piso_str.matches("\\d+")) {
-				        mensaje = "El piso debe ser un número.";
+			        Integer piso = null;
+			        try {
+			        	if (piso_str != null && !piso_str.isEmpty()) {
+					        piso = Integer.parseInt(piso_str);
+					        if (piso < 0) {
+					        	mensaje = "El piso debe ser un número igual o mayor que 0.";
+							    redirigirConMensaje(request, response, rol, mensaje);
+							    return;
+					        }
+					    }
+			        } catch (NumberFormatException e) {
+			        	mensaje = "Se ha producido un error inesperado.";
 				        redirigirConMensaje(request, response, rol, mensaje);
 				        return;
-				    }
-					Integer piso = piso_str == null || piso_str.isEmpty() ? null : Integer.parseInt(piso_str);
-					
-					
-					if (piso != null && piso < 0) {
-					    mensaje = "El piso debe ser un número igual o mayor que 0.";
-					    redirigirConMensaje(request, response, rol, mensaje);
-					    return;
-					}
+			        }
 					
 					
 					if (depto != null && !depto.matches("[a-zA-Z0-9]*")) {
@@ -266,12 +288,21 @@ public class PropiedadServlet extends HttpServlet {
 				
 				case "delete": {
 					String nro_propiedad_str = request.getParameter("nro-propiedad");
-					if (nro_propiedad_str == null || nro_propiedad_str.isEmpty() || !nro_propiedad_str.matches("\\d+")) {
-						mensaje = "El número de propiedad debe ser un número.";
+					if (nro_propiedad_str == null || nro_propiedad_str.isEmpty()) {
+						mensaje = "El número de propiedad no puede estar vacío.";
 						redirigirConMensaje(request, response, rol, mensaje);
 						return;
 					}
-					int nro_propiedad = Integer.parseInt(nro_propiedad_str);
+					
+					
+					int nro_propiedad = 0;
+					try {
+					    nro_propiedad = Integer.parseInt(nro_propiedad_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
 					
 					
 					prop = new Propiedad(anun, nro_propiedad);
