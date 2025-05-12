@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 
 import data.PrecioData;
+import entities.Anunciante;
 import entities.Precio;
 import entities.Propiedad;
 
@@ -18,11 +19,19 @@ public class PrecioController {
 	public LinkedList<Precio> getAll() {
 		return pd.getAll();
 	}
-
+	
+	public LinkedList<Precio> getAllByAnunciante(Anunciante anun) {
+		return pd.getAllByAnunciante(anun);
+	}
+	
+	public Precio getByPropiedadFechaDesde(Precio pre) {
+		return pd.getByPropiedadFechaDesde(pre);
+	}
+	
 	public Precio getUltimoByPropiedad(Propiedad prop) {
 		return pd.getUltimoByPropiedad(prop);
 	}
-
+	
 	public boolean precioAsignadoHoy(Propiedad prop) {
 		Precio pre = pd.getUltimoByPropiedad(prop);
 		if (pre != null) {
@@ -32,16 +41,16 @@ public class PrecioController {
 		}
 	}
 	
-	public void add(Precio p) {
-		pd.add(p);
+	public void add(Precio pre) {
+		pd.add(pre);
 	}
 	
-	public void update(Precio p) {
-		pd.update(p);
+	public void update(Precio pre) {
+		pd.update(pre);
 	}
 	
-	public void delete(Precio p) {
-		pd.deleteByPropiedad(p);
+	public void delete(Precio pre) {
+		pd.deleteByPropiedad(pre);
 	}
-
+	
 }

@@ -25,6 +25,7 @@
                 <a href="propiedadservlet?action=create" class="list-group-item list-group-item-action mb-3">Registrar propiedad</a>
                 <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Ver mis propiedades</a>
                 <a href="precioservlet?action=create" class="list-group-item list-group-item-action mb-3">Registrar precio de una propiedad</a>
+                <a href="precioservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Ver histórico de precios</a>
                 <a href="anuncianteservlet?action=update" class="list-group-item list-group-item-action mb-3">Actualizar datos de mi cuenta</a>
                 <form action="anuncianteservlet?action=delete" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu cuenta?')">
                     <button type="submit" class="list-group-item list-group-item-action mb-3">Eliminar mi cuenta</button>

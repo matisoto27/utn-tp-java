@@ -62,6 +62,117 @@ public class PrecioData {
 		}
 		return precios;
 	}
+	
+	public LinkedList<Precio> getAllByAnunciante(Anunciante anun) {
+		LinkedList<Precio> precios = new LinkedList<>();
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = DbConnector.getInstancia().getConn().prepareStatement(
+					  "SELECT * FROM precios pre "
+					+ "INNER JOIN propiedades prop "
+					+ "		ON pre.nro_propiedad = prop.nro_propiedad "
+					+ "		AND pre.id_anunciante = prop.id_anunciante "
+					+ "INNER JOIN anunciantes anun "
+					+ "		ON prop.id_anunciante = anun.id_anunciante "
+					+ "WHERE pre.id_anunciante = ?");
+			stmt.setInt(1, anun.getIdAnunciante());
+			rs = stmt.executeQuery();
+			if (rs != null) {
+				while (rs.next()) {
+					Precio p = new Precio();
+					p.setPropiedad(new Propiedad());
+					p.getPropiedad().setNroPropiedad(rs.getInt("nro_propiedad"));
+					p.getPropiedad().setAnunciante(new Anunciante());
+					p.getPropiedad().getAnunciante().setIdAnunciante(rs.getInt("id_anunciante"));
+					p.getPropiedad().getAnunciante().setNombre(rs.getString("nombre"));
+					p.getPropiedad().getAnunciante().setEmail(rs.getString("email"));
+					p.getPropiedad().getAnunciante().setTelefono(rs.getString("telefono"));
+					p.getPropiedad().getAnunciante().setUsuario(rs.getString("usuario"));
+					p.getPropiedad().getAnunciante().setContrasena(rs.getString("contrasena"));
+					p.getPropiedad().setDireccion(rs.getString("direccion"));
+					p.getPropiedad().setPiso(rs.getInt("piso"));
+					p.getPropiedad().setDepto(rs.getString("depto"));
+
+					p.setFechaDesde(rs.getObject("fecha_desde", LocalDate.class));
+					p.setValor(rs.getDouble("valor"));
+
+					precios.add(p);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				DbConnector.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return precios;
+	}
+	
+	public Precio getByPropiedadFechaDesde(Precio pre) {
+		Precio p = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = DbConnector.getInstancia().getConn().prepareStatement(
+					  "SELECT * FROM precios pre "
+					+ "INNER JOIN propiedades prop "
+					+ "		ON pre.id_anunciante = prop.id_anunciante "
+					+ "		AND pre.id_anunciante = prop.id_anunciante "
+					+ "INNER JOIN anunciantes anun "
+					+ "		ON prop.id_anunciante = anun.id_anunciante "
+					+ "WHERE pre.id_anunciante = ? AND pre.nro_propiedad = ? AND pre.fecha_desde = ?");
+			stmt.setInt(1, pre.getPropiedad().getAnunciante().getIdAnunciante());
+			stmt.setInt(2, pre.getPropiedad().getNroPropiedad());
+			stmt.setObject(3, pre.getFechaDesde());
+			rs = stmt.executeQuery();
+			if (rs != null && rs.next()) {
+				p = new Precio();
+
+				p.setPropiedad(new Propiedad());
+				p.getPropiedad().setNroPropiedad(rs.getInt("nro_propiedad"));
+
+				p.getPropiedad().setAnunciante(new Anunciante());
+				p.getPropiedad().getAnunciante().setIdAnunciante(rs.getInt("id_anunciante"));
+				p.getPropiedad().getAnunciante().setNombre(rs.getString("nombre"));
+				p.getPropiedad().getAnunciante().setEmail(rs.getString("email"));
+				p.getPropiedad().getAnunciante().setTelefono(rs.getString("telefono"));
+				p.getPropiedad().getAnunciante().setUsuario(rs.getString("usuario"));
+				p.getPropiedad().getAnunciante().setContrasena(rs.getString("contrasena"));
+
+				p.getPropiedad().setDireccion(rs.getString("direccion"));
+				p.getPropiedad().setPiso(rs.getInt("piso"));
+				p.getPropiedad().setDepto(rs.getString("depto"));
+
+				p.setFechaDesde(rs.getObject("fecha_desde", LocalDate.class));
+				p.setValor(rs.getDouble("valor"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				DbConnector.getInstancia().releaseConn();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return p;
+	}
 
 	public Precio getUltimoByPropiedad(Propiedad prop) {
 		Precio p = null;

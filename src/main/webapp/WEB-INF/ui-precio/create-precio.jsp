@@ -51,7 +51,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="valor" class="form-label">Nuevo Precio ($)</label>
-                    <input type="text" class="form-control" name="valor" id="valor">
+                    <input type="text" class="form-control" name="valor" id="valor" required>
                 </div>
                 <div class="mb-2">
                     <button type="submit" class="btn btn-primary w-100" <%= propiedades.isEmpty() ? "disabled" : "" %>>Registrar</button>

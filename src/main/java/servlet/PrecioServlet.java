@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.LinkedList;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -26,54 +27,53 @@ public class PrecioServlet extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		String rol = (String) request.getSession().getAttribute("rol");
-		if (!rol.equals("administrador") && !rol.equals("anunciante")) {
+		if (rol == null || rol.isEmpty()) {
 			response.sendRedirect("http://localhost:8080/utn-tp-java/");
 			return;
 		}
-		Precio pre = new Precio();
+		if (!rol.equals("administrador") && !rol.equals("anunciante")) {
+			request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+			return;
+		}
 		PrecioController pc = new PrecioController();
 		String action = request.getParameter("action");
 		String mensaje = null;
 		if (action != null) {
 			switch (action) {
+			
+			
 				case "create": {
-					if (rol.equals("anunciante")) {
-						PropiedadController propc = new PropiedadController();
-						Anunciante anun = (Anunciante) request.getSession().getAttribute("usuario");
-						LinkedList<Propiedad> propiedades = propc.getPropiedadesByAnunciante(anun);
-						request.setAttribute("propiedades", propiedades);
-						request.getRequestDispatcher("WEB-INF/ui-precio/create-precio.jsp").forward(request, response);
-					} else {
+					if (!rol.equals("anunciante")) {
 						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+						return;
 					}
+					
+					
+					Anunciante anun = (Anunciante) request.getSession().getAttribute("usuario");
+					LinkedList<Propiedad> propiedades = new PropiedadController().getPropiedadesByAnunciante(anun);
+					request.setAttribute("propiedades", propiedades);
+					request.getRequestDispatcher("WEB-INF/ui-precio/create-precio.jsp").forward(request, response);
 					break;
 				}
+				
+				
 				case "retrieve": {
 					if (rol.equals("administrador")) {
-						pre = (Precio) request.getSession().getAttribute("respuestas_correctas");
-						String errores = (String) request.getSession().getAttribute("errores");
 						mensaje = (String) request.getSession().getAttribute("mensaje");
-						if (pre != null) {
-							request.setAttribute("respuestas_correctas", pre);
-							request.getSession().removeAttribute("respuestas_correctas");
-						}
-						if (errores != null) {
-							request.setAttribute("errores", errores);
-							request.getSession().removeAttribute("errores");
-						}
 						if (mensaje != null) {
 							request.setAttribute("mensaje", mensaje);
 							request.getSession().removeAttribute("mensaje");
 						}
 						LinkedList<Precio> precios = pc.getAll();
-						PropiedadController propc = new PropiedadController();
-						LinkedList<Propiedad> propiedades = propc.getAll();
+						LinkedList<Propiedad> propiedades = new PropiedadController().getAll();
 						request.setAttribute("precios", precios);
 						request.setAttribute("propiedades", propiedades);
 						request.getRequestDispatcher("WEB-INF/ui-precio/crud-precio.jsp").forward(request, response);
 					} else {
-						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
-						// FALTA EL HISTORICO DE PRECIOS PARA EL ANUNCIANTE
+						Anunciante anun = (Anunciante) request.getSession().getAttribute("usuario");
+						LinkedList<Precio> precios = pc.getAllByAnunciante(anun);
+						request.setAttribute("precios", precios);
+						request.getRequestDispatcher("WEB-INF/ui-precio/lista-precios-anunciante.jsp").forward(request, response);
 					}
 					break;
 				}
@@ -83,92 +83,265 @@ public class PrecioServlet extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String rol = (String) request.getSession().getAttribute("rol");
-		if (!rol.equals("administrador") && !rol.equals("anunciante")) {
+		if (rol == null || rol.isEmpty()) {
 			response.sendRedirect("http://localhost:8080/utn-tp-java/");
 			return;
 		}
+		if (!rol.equals("administrador") && !rol.equals("anunciante")) {
+			request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+			return;
+		}
+		Anunciante anun = new Anunciante();
+		AnuncianteController ac = new AnuncianteController();
 		Precio pre = new Precio();
 		PrecioController pc = new PrecioController();
 		String action = request.getParameter("action");
 		String mensaje = null;
 		if (action != null) {
+			
+			
+			if (rol.equals("administrador")) {
+	        	String id_anunciante_str = request.getParameter("id-anunciante");
+	        	if (id_anunciante_str == null || id_anunciante_str.isEmpty()) {
+	        		mensaje = "El ID del anunciante no puede estar vacío.";
+					redirigirConMensaje(request, response, rol, mensaje);
+					return;
+	        	}
+	        	
+	        	
+	        	int id_anunciante = 0;
+				try {
+					id_anunciante = Integer.parseInt(id_anunciante_str);
+				} catch (NumberFormatException e) {
+					mensaje = "Se ha producido un error inesperado.";
+					redirigirConMensaje(request, response, rol, mensaje);
+					return;
+				}
+				
+				
+	        	anun.setIdAnunciante(id_anunciante);
+	        	anun = ac.getById(anun);
+	        	if (anun == null) {
+					mensaje = "No se encontró un anunciante con el ID proporcionado.";
+					redirigirConMensaje(request, response, rol, mensaje);
+					return;
+				}
+	        } else {
+	        	anun = (Anunciante) request.getSession().getAttribute("usuario");
+	        }
+			
+			
 			switch (action) {
+			
+			
 				case "create": {
-					int nro_propiedad = Integer.parseInt(request.getParameter("nro-propiedad"));
-					double valor = Double.parseDouble(request.getParameter("valor"));
-					Anunciante anun = getAnuncianteFromSessionOrRequest(request, rol);
-					Propiedad prop = new Propiedad();
-					prop.setAnunciante(anun);
-					prop.setNroPropiedad(nro_propiedad);
-					if (pc.precioAsignadoHoy(prop)) {
-						mensaje = "Esta propiedad ya tiene un precio asignado el dia de hoy.";
-					} else {
-						pre.setPropiedad(prop);
-						pre.setValor(valor);
-						pc.add(pre);
-						mensaje = "Precio registrado con éxito.";
+					String nro_propiedad_str = request.getParameter("nro-propiedad");
+					String valor_str = request.getParameter("valor");
+					
+					
+					if (nro_propiedad_str == null || nro_propiedad_str.isEmpty()) {
+						mensaje = "El número de propiedad no puede estar vacío.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
 					}
-					if (rol.equals("anunciante")) {
-						request.setAttribute("mensaje", mensaje);
-						request.getRequestDispatcher("WEB-INF/menu-anunciante.jsp").forward(request, response);
-					} else {
-						request.getSession().setAttribute("mensaje", mensaje);
-						response.sendRedirect("precioservlet?action=retrieve");
+					
+					
+					int nro_propiedad = 0;
+					try {
+					    nro_propiedad = Integer.parseInt(nro_propiedad_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
 					}
-					break;
-				}
-				case "update": {
-					if (rol.equals("administrador")) {
-						int id_anunciante = Integer.parseInt(request.getParameter("id-anunciante"));
-						int nro_propiedad = Integer.parseInt(request.getParameter("nro-propiedad"));
-						LocalDate fecha_desde = LocalDate.parse(request.getParameter("fecha-desde"));
-						Double valor = Double.parseDouble(request.getParameter("valor"));
-						pre.setPropiedad(new Propiedad());
-						pre.getPropiedad().setAnunciante(new Anunciante());
-						pre.getPropiedad().getAnunciante().setIdAnunciante(id_anunciante);
-						pre.getPropiedad().setNroPropiedad(nro_propiedad);
-						pre.setFechaDesde(fecha_desde);
-						pre.setValor(valor);
-						pc.update(pre);
-						mensaje = "Precio actualizado con éxito.";
-						request.getSession().setAttribute("mensaje", mensaje);
-						response.sendRedirect("precioservlet?action=retrieve");
-					} else {
-						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+					
+					
+					if (valor_str == null || valor_str.isEmpty()) {
+						mensaje = "El valor del precio no puede estar vacío.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
 					}
-					break;
-				}
-				case "delete": {
-					if (rol.equals("administrador")) {
-						int id_anunciante = Integer.parseInt(request.getParameter("id-anunciante"));
-						int nro_propiedad = Integer.parseInt(request.getParameter("nro-propiedad"));
-						pre.setPropiedad(new Propiedad());
-						pre.getPropiedad().setAnunciante(new Anunciante());
-						pre.getPropiedad().getAnunciante().setIdAnunciante(id_anunciante);
-						pre.getPropiedad().setNroPropiedad(nro_propiedad);
-						pc.delete(pre);
-						mensaje = "Precio eliminado con éxito.";
-						request.getSession().setAttribute("mensaje", mensaje);
-						response.sendRedirect("precioservlet?action=retrieve");
-			        } else {
-			        	request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+					
+					
+					double valor = 0;
+					try {
+						valor = Double.parseDouble(valor_str);
+			        } catch (NumberFormatException e) {
+			        	mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
 			        }
+					
+					
+					Propiedad prop = new Propiedad(anun, nro_propiedad);
+					prop = new PropiedadController().getByIdAnunNroProp(prop);
+					if (prop == null) {
+						mensaje = "No se encontró una propiedad con los datos proporcionados.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					if (pc.precioAsignadoHoy(prop)) {
+						mensaje = "La propiedad ya tiene un precio asignado para el día de hoy.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					pre.setPropiedad(prop);
+					pre.setValor(valor);
+					pc.add(pre);
+					mensaje = "Precio registrado con éxito.";
+					redirigirConMensaje(request, response, rol, mensaje);
+					break;
+				}
+				
+				
+				case "update": {
+					if (!rol.equals("administrador")) {
+						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+						return;
+					}
+					
+					
+					String nro_propiedad_str = request.getParameter("nro-propiedad");
+					String fecha_desde_str = request.getParameter("fecha-desde");
+					String valor_str = request.getParameter("valor");
+					
+					
+					if (nro_propiedad_str == null || nro_propiedad_str.isEmpty()) {
+						mensaje = "El número de propiedad no puede estar vacío.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					int nro_propiedad = 0;
+					try {
+					    nro_propiedad = Integer.parseInt(nro_propiedad_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					Propiedad prop = new Propiedad(anun, nro_propiedad);
+					prop = new PropiedadController().getByIdAnunNroProp(prop);
+					if (prop == null) {
+						mensaje = "No se encontró una propiedad con los datos proporcionados.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					if (fecha_desde_str == null || fecha_desde_str.isEmpty()) {
+						mensaje = "La fecha no puede estar vacía.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					LocalDate fecha_desde = null;
+					try {
+						fecha_desde = LocalDate.parse(fecha_desde_str);
+			        } catch (DateTimeParseException e) {
+			        	mensaje = "La fecha no tiene un formato válido.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+			        }
+					
+					
+					pre.setPropiedad(prop);
+					pre.setFechaDesde(fecha_desde);
+					pre = pc.getByPropiedadFechaDesde(pre);
+					if (pre == null) {
+						mensaje = "No se encontró un precio con los datos proporcionados.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					if (valor_str == null || valor_str.isEmpty()) {
+						mensaje = "El valor del precio no puede estar vacío.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					double valor = 0;
+					try {
+						valor = Double.parseDouble(valor_str);
+			        } catch (NumberFormatException e) {
+			        	mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+			        }
+					
+					
+					pre.setValor(valor);
+					pc.update(pre);
+					mensaje = "Precio actualizado con éxito.";
+					request.getSession().setAttribute("mensaje", mensaje);
+					response.sendRedirect("precioservlet?action=retrieve");
+					break;
+				}
+				
+				
+				case "delete": {
+					if (!rol.equals("administrador")) {
+						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+						return;
+					}
+					
+					
+					String nro_propiedad_str = request.getParameter("nro-propiedad");
+					if (nro_propiedad_str == null || nro_propiedad_str.isEmpty()) {
+						mensaje = "El número de propiedad no puede estar vacío.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					int nro_propiedad = 0;
+					try {
+					    nro_propiedad = Integer.parseInt(nro_propiedad_str);
+					} catch (NumberFormatException e) {
+						mensaje = "Se ha producido un error inesperado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					Propiedad prop = new Propiedad(anun, nro_propiedad);
+					prop = new PropiedadController().getByIdAnunNroProp(prop);
+					if (prop == null) {
+						mensaje = "No se encontró una propiedad con los datos proporcionados.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
+					
+					pre.setPropiedad(prop);
+					pc.delete(pre);
+					mensaje = "Precio eliminado con éxito.";
+					request.getSession().setAttribute("mensaje", mensaje);
+					response.sendRedirect("precioservlet?action=retrieve");
 					break;
 				}
 			}
 		}
 	}
 	
-	private Anunciante getAnuncianteFromSessionOrRequest(HttpServletRequest request, String rol) {
-        Anunciante anun = new Anunciante();
-        if (rol.equals("anunciante")) {
-        	anun = (Anunciante) request.getSession().getAttribute("usuario");
-        } else if (rol.equals("administrador")) {
-        	int id_anunciante = Integer.parseInt(request.getParameter("id-anunciante"));
-			anun.setIdAnunciante(id_anunciante);
-			anun = new AnuncianteController().getById(anun);
-        }
-        return anun;
-    }
+	private void redirigirConMensaje(HttpServletRequest request, HttpServletResponse response, String rol, String mensaje) throws ServletException, IOException {
+		if (rol.equals("administrador")) {
+			request.getSession().setAttribute("mensaje", mensaje);
+			response.sendRedirect("precioservlet?action=retrieve");
+	    } else {
+	    	request.setAttribute("mensaje", mensaje);
+			request.getRequestDispatcher("WEB-INF/menu-anunciante.jsp").forward(request, response);
+	    }
+	}
 	
 }
