@@ -310,7 +310,7 @@ public class AlquilerServlet extends HttpServlet {
 						}
 						
 						
-						if (fecha_inicio_contrato != null && fecha_inicio_contrato.isBefore(alq.getFechaSolicitado())) {
+						if (fecha_inicio_contrato != null && fecha_inicio_contrato.isBefore(fecha_solicitado)) {
 						    mensaje = "La fecha de inicio del contrato no puede ser anterior a la fecha de solicitud.";
 						    redirigirConMensaje(request, response, rol, mensaje);
 						    return;
@@ -549,7 +549,7 @@ public class AlquilerServlet extends HttpServlet {
 					}
 					
 					
-					if (fecha_inicio_contrato != null && fecha_inicio_contrato.isBefore(alq.getFechaSolicitado())) {
+					if (fecha_inicio_contrato != null && fecha_inicio_contrato.isBefore(fecha_solicitado)) {
 					    mensaje = "La fecha de inicio del contrato no puede ser anterior a la fecha de solicitud.";
 					    redirigirConMensaje(request, response, rol, mensaje);
 					    return;
@@ -780,7 +780,7 @@ public class AlquilerServlet extends HttpServlet {
 					}
 					
 					
-					if (fecha_inicio_contrato != null && fecha_inicio_contrato.isBefore(alq.getFechaSolicitado())) {
+					if (fecha_inicio_contrato.isBefore(alq.getFechaSolicitado())) {
 					    mensaje = "La fecha de inicio del contrato no puede ser anterior a la fecha de solicitud.";
 					    redirigirConMensaje(request, response, rol, mensaje);
 					    return;

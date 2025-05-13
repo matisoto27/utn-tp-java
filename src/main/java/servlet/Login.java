@@ -44,29 +44,30 @@ public class Login extends HttpServlet {
 		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String tipo = request.getParameter("tipo");
 		String contrasena = request.getParameter("contrasena");
+		String mensaje = null;
+		
+		if (tipo.equals("administrador")) {
+			Administrador adm = new Administrador();
+			AdministradorController ac = new AdministradorController();
 
-		if (tipo.equals("cliente")) {
-			Cliente cli = new Cliente();
-			ClienteController cc = new ClienteController();
+			String usuario = request.getParameter("usuario");
 
-			String dni = request.getParameter("dni");
+			adm.setUsuario(usuario);
+			adm.setContrasena(contrasena);
 
-			cli.setDni(dni);
-			cli.setContrasena(contrasena);
+			adm = ac.getByUsuarioContrasena(adm);
 
-			cli = cc.validarCredenciales(cli);
-
-			if (cli != null) {
-				request.getSession().setAttribute("usuario", cli);
-				request.getSession().setAttribute("rol", "cliente");
-				request.getRequestDispatcher("WEB-INF/menu-cliente.jsp").forward(request, response);
+			if (adm != null) {
+				request.getSession().setAttribute("usuario", adm);
+				request.getSession().setAttribute("rol", "administrador");
+				request.getRequestDispatcher("WEB-INF/menu-administrador.jsp").forward(request, response);
 			} else {
-				// Manejar error cliente no existe
+				mensaje = "Credenciales incorrectas.";
+				request.setAttribute("mensaje", mensaje);
+				request.getRequestDispatcher("index.jsp").forward(request, response);
 			}
 		} else if (tipo.equals("anunciante")) {
 			Anunciante anun = new Anunciante();
@@ -84,25 +85,29 @@ public class Login extends HttpServlet {
 				request.getSession().setAttribute("rol", "anunciante");
 				request.getRequestDispatcher("WEB-INF/menu-anunciante.jsp").forward(request, response);
 			} else {
-				// Manejar error anunciante no existe
+				mensaje = "Credenciales incorrectas.";
+				request.setAttribute("mensaje", mensaje);
+				request.getRequestDispatcher("index.jsp").forward(request, response);
 			}
 		} else {
-			Administrador adm = new Administrador();
-			AdministradorController ac = new AdministradorController();
+			Cliente cli = new Cliente();
+			ClienteController cc = new ClienteController();
 
-			String usuario = request.getParameter("usuario");
+			String dni = request.getParameter("dni");
 
-			adm.setUsuario(usuario);
-			adm.setContrasena(contrasena);
+			cli.setDni(dni);
+			cli.setContrasena(contrasena);
 
-			adm = ac.getByUsuarioContrasena(adm);
+			cli = cc.validarCredenciales(cli);
 
-			if (adm != null) {
-				request.getSession().setAttribute("usuario", adm);
-				request.getSession().setAttribute("rol", "administrador");
-				request.getRequestDispatcher("WEB-INF/menu-administrador.jsp").forward(request, response);
+			if (cli != null) {
+				request.getSession().setAttribute("usuario", cli);
+				request.getSession().setAttribute("rol", "cliente");
+				request.getRequestDispatcher("WEB-INF/menu-cliente.jsp").forward(request, response);
 			} else {
-				// Manejar error anunciante no existe
+				mensaje = "Credenciales incorrectas.";
+				request.setAttribute("mensaje", mensaje);
+				request.getRequestDispatcher("index.jsp").forward(request, response);
 			}
 		}
 	}

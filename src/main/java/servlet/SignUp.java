@@ -18,14 +18,13 @@ public class SignUp extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String rol = request.getParameter("rol");
-        if (rol.equals("cliente")) {
+		if (rol.equals("anunciante")) {
+			request.getSession().setAttribute("rol", "anunciante");
+            request.getRequestDispatcher("/signup-anunciante.jsp").forward(request, response);
+		} else if (rol.equals("cliente")) {
         	request.getSession().setAttribute("rol", "cliente");
             request.getRequestDispatcher("/signup-cliente.jsp").forward(request, response);
-        } else if (rol.equals("anunciante")) {
-        	request.getSession().setAttribute("rol", "anunciante");
-            request.getRequestDispatcher("/signup-anunciante.jsp").forward(request, response);
         } else {
-        	// Mostrar mensaje de error
         	response.sendRedirect("signup.html");
         }
 	}
