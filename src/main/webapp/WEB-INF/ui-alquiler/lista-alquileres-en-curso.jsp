@@ -152,7 +152,7 @@
                                                 </h5>
                                                 <form action="alquilerservlet?action=delete" method="POST">
                                                     <input type="hidden" name="id-alquiler" value="<%= id_alquiler %>">
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que deseas cancelar?')">Cancelar</button>
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que deseas cancelar la reserva?')">Cancelar reserva</button>
                                                 </form>
                                             </div>
                                         </td>

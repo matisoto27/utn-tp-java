@@ -29,19 +29,43 @@ body {
 }
 
 .list-group a:nth-child(odd) {
-    background-color: crimson;
+    background-color: #6C5CE7;
 }
 
 .list-group a:nth-child(even) {
-    background-color: #0866ff;
+    background-color: #00B894;
 }
 
 .list-group a:nth-child(odd):hover {
-    background-color: #9E1B32;
+    background-color: #574B90;
 }
 
 .list-group a:nth-child(even):hover {
-    background-color: deepskyblue;
+    background-color: #019875;
+}
+
+#eliminar-cuenta {
+    border-width: 1px;
+    border-radius: 10px;
+    padding: 20px;
+    transition: 0.3s;
+    color: white;
+    background-color: #E17055;
+}
+
+#eliminar-cuenta:hover {
+    background-color: #D63031;
+}
+
+#cerrar-sesion {
+    background-color: white;
+    color: #2d3436;
+}
+
+#cerrar-sesion:hover {
+    background-color: #f1f2f6;
+    border-color: #b2bec3;
+    color: #2d3436;
 }
 
 .crud-table {

@@ -28,9 +28,9 @@
                 <a href="precioservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Ver histórico de precios</a>
                 <a href="anuncianteservlet?action=update" class="list-group-item list-group-item-action mb-3">Actualizar datos de mi cuenta</a>
                 <form action="anuncianteservlet?action=delete" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu cuenta?')">
-                    <button type="submit" class="list-group-item list-group-item-action mb-3">Eliminar mi cuenta</button>
+                    <button type="submit" class="list-group-item list-group-item-action mb-3" id="eliminar-cuenta">Eliminar mi cuenta</button>
                 </form>
-                <a href="logout" class="list-group-item list-group-item-action mb-3">Cerrar sesión</a>
+                <a href="logout" class="list-group-item list-group-item-action mb-3" id="cerrar-sesion">Cerrar sesión</a>
             </div>
         </div>
     </div>

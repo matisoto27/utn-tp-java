@@ -20,7 +20,7 @@
                 <a href="clienteservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">CRUD Cliente</a>
                 <a href="precioservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">CRUD Precio</a>
                 <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">CRUD Propiedad</a>
-                <a href="logout" class="list-group-item list-group-item-action mb-3">Cerrar Sesión</a>
+                <a href="logout" class="list-group-item list-group-item-action mb-3" id="cerrar-sesion">Cerrar Sesión</a>
             </div>
         </div>
     </div>

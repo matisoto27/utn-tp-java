@@ -41,7 +41,7 @@
                             if (propiedades.isEmpty()) {
                             %>
                                 <tr>
-                                    <td colspan="6" style="text-align: center;">
+                                    <td colspan="8" style="text-align: center;">
                                         No hay propiedades disponibles
                                     </td>
                                 </tr>
@@ -70,7 +70,7 @@
                                                 comentarios.append("<strong>")
                                                 .append(alq.getCliente().getApellido() + " " + alq.getCliente().getNombre())
                                                 .append(":</strong> ")
-                                                .append(alq.getComentario().replace("\"", "&quot;")) // Evitar romper atributos HTML
+                                                .append(alq.getComentario().replace("\"", "&quot;"))
                                                 .append("<br>");
                                             }
                                         }
