@@ -52,8 +52,30 @@ public class AlquilerServlet extends HttpServlet {
 						break;
 					}
 					Anunciante anun = (Anunciante) request.getSession().getAttribute("usuario");
-					LinkedList<Alquiler> alquileres = ac.getAlquileresPendientesEnCursoByAnunciante(anun);
+					String filtro_str = request.getParameter("filtro");
+					int filtro = 0;
+					try {
+					    filtro = Integer.parseInt(filtro_str);
+					} catch (NumberFormatException e) {
+					    filtro = 0;
+					}
+					LinkedList<Alquiler> alquileres = new LinkedList<>();
+					switch (filtro) {
+						case 0: {
+							alquileres = ac.getAlquileresPendientesEnCursoByAnunciante(anun);
+							break;
+						}
+						case 1: {
+							alquileres = ac.getAlquileresPendientesByAnunciante(anun);
+							break;
+						}
+						case 2: {
+							alquileres = ac.getAlquileresEnCursoByAnunciante(anun);
+							break;
+						}
+					}
 					request.setAttribute("alquileres", alquileres);
+					request.setAttribute("filtro", filtro);
 					request.getRequestDispatcher("WEB-INF/ui-alquiler/lista-alquileres-en-curso.jsp").forward(request, response);
 					break;
 				}
@@ -135,6 +157,12 @@ public class AlquilerServlet extends HttpServlet {
 					request.getRequestDispatcher("WEB-INF/ui-alquiler/alquiler-actual.jsp").forward(request, response);
 					break;
 				}
+				
+				default: {
+					request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
+					break;
+				}
+				
 			}
 		}
 	}
@@ -614,13 +642,7 @@ public class AlquilerServlet extends HttpServlet {
 				
 				
 				case "delete": {
-					if (!rol.equals("administrador") && !rol.equals("cliente")) {
-						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
-						break;
-					}
-					
-					
-					if (rol.equals("administrador")) {
+					if (rol.equals("administrador") || rol.equals("anunciante")) {
 						String id_alquiler_str = request.getParameter("id-alquiler");
 						if (id_alquiler_str == null || id_alquiler_str.isEmpty()) {
 							mensaje = "El ID del alquiler no puede estar vacío.";
@@ -822,7 +844,7 @@ public class AlquilerServlet extends HttpServlet {
 				
 				
 				case "cancelarcontrato": {
-					if (!rol.equals("cliente")) {
+					if (!rol.equals("anunciante")) {
 						request.getRequestDispatcher("WEB-INF/acceso-no-autorizado.jsp").forward(request, response);
 						break;
 					}

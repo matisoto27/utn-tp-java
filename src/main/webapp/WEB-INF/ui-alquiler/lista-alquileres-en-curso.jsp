@@ -15,6 +15,8 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <%
     LinkedList<Alquiler> alquileres = (LinkedList<Alquiler>) request.getAttribute("alquileres");
+    Object filtro_attr = request.getAttribute("filtro");
+    int filtro = (filtro_attr != null) ? (Integer) filtro_attr : 0;
     %>
 </head>
 
@@ -23,6 +25,18 @@
         <div class="container">
             <div class="row mb-4">
                 <div class="col">
+                    <form method="get" action="alquilerservlet" class="mb-4">
+                        <input type="hidden" name="action" value="alquileresencursobyanunciante"/>
+                        <div class="row">
+                            <div class="col-md-4 offset-md-4">
+                                <select class="form-select" name="filtro" onchange="this.form.submit()">
+                                    <option value="0" <%= filtro == 0 ? "selected" : "" %>>Todos</option>
+                                    <option value="1" <%= filtro == 1 ? "selected" : "" %>>Pendiente</option>
+                                    <option value="2" <%= filtro == 2 ? "selected" : "" %>>En curso</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
                     <table class="table text-center table-hover">
                         <thead>
                             <tr>
@@ -41,7 +55,21 @@
                             %>
                                 <tr>
                                     <td colspan="8" style="text-align: center;">
-                                        No existe ningún alquiler pendiente o en curso
+                                        <%
+                                            if (filtro == 1) {
+                                        %>
+                                                No existe ningún alquiler pendiente
+                                        <%
+                                            } else if (filtro == 2) {
+                                        %>
+                                                No existe ningún alquiler en curso
+                                        <%
+                                            } else {
+                                        %>
+                                                No existe ningún alquiler pendiente o en curso
+                                        <%
+                                            }
+                                        %>
                                     </td>
                                 </tr>
                             <%
@@ -96,7 +124,15 @@
                                             } else {
                             %>
                                                 <td>
-                                                    <h5><span class="badge bg-success">En curso</span></h5>
+                                                    <div class="d-flex align-items-center justify-content-center gap-2">
+                                                        <h5 class="mb-0">
+                                                            <span class="badge bg-success">En curso</span>
+                                                        </h5>
+                                                        <form action="alquilerservlet?action=cancelarcontrato" method="POST">
+                                                            <input type="hidden" name="id-alquiler" value="<%= id_alquiler %>">
+                                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que deseas cancelar el contrato de alquiler?')">Cancelar contrato</button>
+                                                        </form>
+                                                    </div>
                                                 </td>
                             <%
                                             }
@@ -110,7 +146,15 @@
                                     } else {
                             %>
                                         <td>
-                                            <h5><span class="badge bg-warning text-dark">Pendiente</span></h5>
+                                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                                <h5 class="mb-0">
+                                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                                </h5>
+                                                <form action="alquilerservlet?action=delete" method="POST">
+                                                    <input type="hidden" name="id-alquiler" value="<%= id_alquiler %>">
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que deseas cancelar?')">Cancelar</button>
+                                                </form>
+                                            </div>
                                         </td>
                             <%
                                     }

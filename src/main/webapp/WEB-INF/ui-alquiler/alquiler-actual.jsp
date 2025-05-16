@@ -43,41 +43,32 @@
                         <p><strong>Fecha de inicio:</strong> <%= fecha_inicio_contrato %></p>
                         <p><strong>Fecha de finalización:</strong> <%= fecha_fin_contrato %></p>
                         <%
-                        if (alq.getFechaFinContrato().isAfter(LocalDate.now())) {
-                        %>
-                            <div class="text-center mt-4">
-                                <form method="post" action="alquilerservlet?action=cancelarcontrato">
-                                    <input type="hidden" name="id-alquiler" id="id-alquiler" value="<%= id_alquiler %>">
-                                    <button class="btn btn-danger" onclick="return confirm('¿Estás seguro de que deseas cancelar el contrato de alquiler?')">Cancelar Contrato</button>
-                                </form>
-                            </div>
-                        <%
-                        } else {
+                            if (LocalDate.now().isAfter(alq.getFechaFinContrato())) {
                         %>
                             <div class="alert alert-info text-center mt-4">
                                 <strong>¡El contrato ha finalizado!</strong>
                             </div>
                             <%
-                            if (alq.getPuntuacion() == 0) {
+                                if (alq.getPuntuacion() == 0) {
                             %>
-                            <div class="text-center mt-4">
-                                <h5>Tu opinión nos interesa</h5>
-                                <form method="post" action="alquilerservlet?action=puntuacioncomentario" onsubmit="return validarFormulario()">
-                                    <input type="hidden" name="id-alquiler" id="id-alquiler" value="<%= id_alquiler %>">
-                                    <div class="mb-3">
-                                        <label for="puntuacion" class="form-label">Puntaje (1-10):</label>
-                                        <input type="number" class="form-control" name="puntuacion" id="puntuacion" min="1" max="10" required>
+                                    <div class="text-center mt-4">
+                                        <h5>Tu opinión nos interesa</h5>
+                                        <form method="post" action="alquilerservlet?action=puntuacioncomentario" onsubmit="return validarFormulario()">
+                                            <input type="hidden" name="id-alquiler" id="id-alquiler" value="<%= id_alquiler %>">
+                                            <div class="mb-3">
+                                                <label for="puntuacion" class="form-label">Puntaje (1-10):</label>
+                                                <input type="number" class="form-control" name="puntuacion" id="puntuacion" min="1" max="10" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="comentario">Comentario:</label>
+                                                <textarea class="form-control" style="resize: none;" name="comentario" id="comentario" rows="4" placeholder="Cuéntanos tu experiencia con la propiedad y el contrato de alquiler. ¿Fue lo que esperabas? ¿Qué mejorarías?"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary w-100">Enviar Calificación</button>
+                                        </form>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="comentario">Comentario:</label>
-                                        <textarea class="form-control" style="resize: none;" name="comentario" id="comentario" rows="4" placeholder="Cuéntanos tu experiencia con la propiedad y el contrato de alquiler. ¿Fue lo que esperabas? ¿Qué mejorarías?"></textarea>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary w-100">Enviar Calificación</button>
-                                </form>
-                            </div>
-                            <%
+                        <%
+                                }
                             }
-                        }
                         %>
                         <div class="text-center mt-4">
                             <button type="button" class="btn btn-secondary w-100" onclick='window.location.href="login"'>Volver</button>

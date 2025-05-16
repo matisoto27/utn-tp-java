@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import data.AlquilerData;
 import entities.Alquiler;
 import entities.Anunciante;
+import entities.Propiedad;
 
 public class AlquilerController {
 
@@ -50,12 +51,20 @@ public class AlquilerController {
 		return ad.getAlquileresByAnuncianteYEstados(anun, "Pendiente");
 	}
 	
+	public LinkedList<Alquiler> getAlquileresEnCursoByAnunciante(Anunciante anun) {
+		return ad.getAlquileresByAnuncianteYEstados(anun, "En curso");
+	}
+	
 	public LinkedList<Alquiler> getAlquileresCanceladosByAnunciante(Anunciante anun) {
 		return ad.getAlquileresByAnuncianteYEstados(anun, "Cancelado");
 	}
 	
 	public LinkedList<Alquiler> getAlquileresFinalizadosByAnunciante(Anunciante anun) {
 		return ad.getAlquileresByAnuncianteYEstados(anun, "Finalizado");
+	}
+	
+	public LinkedList<Alquiler> getAlquileresByPropiedad(Propiedad prop) {
+		return ad.getAlquileresByPropiedad(prop);
 	}
 	
 }
