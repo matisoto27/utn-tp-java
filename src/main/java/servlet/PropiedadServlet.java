@@ -285,7 +285,13 @@ public class PropiedadServlet extends HttpServlet {
 					
 					
 					prop = new Propiedad(anun, nro_propiedad, direccion, piso, depto);
-					pc.update(prop);
+					try {
+						pc.update(prop);
+					} catch (RuntimeException e) {
+						mensaje = e.getMessage();
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
 					mensaje = "Propiedad actualizada con éxito.";
 					redirigirConMensaje(request, response, rol, mensaje);
 					break;

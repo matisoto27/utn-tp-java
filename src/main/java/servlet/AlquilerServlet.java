@@ -785,6 +785,12 @@ public class AlquilerServlet extends HttpServlet {
 						return;
 					}
 					
+					if (!alq.getEstado().equals("Pendiente")) {
+						mensaje = "Esta propiedad ya tiene un contrato de alquiler iniciado.";
+						redirigirConMensaje(request, response, rol, mensaje);
+						return;
+					}
+					
 					if (fecha_inicio_str == null || fecha_inicio_str.isEmpty() || fecha_fin_str == null || fecha_fin_str.isEmpty()) {
 						mensaje = "Por favor, ingrese una fecha de inicio y una fecha de fin.";
 						redirigirConMensaje(request, response, rol, mensaje);

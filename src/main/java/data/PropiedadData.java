@@ -149,7 +149,11 @@ public class PropiedadData {
 			stmt.setInt(5, p.getNroPropiedad());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if (e.getErrorCode() == 1062) {
+				throw new RuntimeException("Ya existe una propiedad registrada con esa dirección, piso y departamento.");
+			} else {
+				throw new RuntimeException("Error: " + e.getMessage());
+			}
 		} finally {
 			try {
 				if (stmt != null) {
