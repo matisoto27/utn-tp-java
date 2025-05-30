@@ -199,10 +199,16 @@ public class PropiedadServlet extends HttpServlet {
 					
 					
 			        prop = new Propiedad(anun, direccion, piso, depto);
-			        pc.add(prop);
-					mensaje = "Propiedad registrada con éxito.";
-					redirigirConMensaje(request, response, rol, mensaje);
-					break;
+			        try {
+			        	pc.add(prop);
+			        } catch (RuntimeException e) {
+			        	mensaje = e.getMessage();
+			        	redirigirConMensaje(request, response, rol, mensaje);
+			        	return;
+			        }
+			        mensaje = "Propiedad registrada con éxito.";
+			        redirigirConMensaje(request, response, rol, mensaje);
+			        break;
 				}
 				
 				

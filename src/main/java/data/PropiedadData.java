@@ -41,7 +41,11 @@ public class PropiedadData {
 			}
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			if (e.getErrorCode() == 1062) {
+				throw new RuntimeException("Ya existe una propiedad registrada con esa dirección, piso y departamento.");
+			} else {
+				throw new RuntimeException("Error: " + e.getMessage());
+			}
 		} finally {
 			try {
 				if (rs != null) {
@@ -74,7 +78,9 @@ public class PropiedadData {
 					+ "		AND pre.fecha_desde = ("
 					+ "			SELECT MAX(fecha_desde) "
 					+ "			FROM precios "
-					+ "			WHERE id_anunciante = prop.id_anunciante AND nro_propiedad = prop.nro_propiedad"
+					+ "			WHERE id_anunciante = prop.id_anunciante "
+					+ "			AND nro_propiedad = prop.nro_propiedad "
+					+ "			AND fecha_desde <= CURDATE()"
 					+ "		) "
 					+ "LEFT JOIN alquileres alq "
 					+ "		ON prop.id_anunciante = alq.id_anunciante "
@@ -245,76 +251,6 @@ public class PropiedadData {
 		return p;
 	}
 	
-	public LinkedList<Propiedad> getPropiedadesDisponibles() {
-		Statement stmt = null;
-		ResultSet rs = null;
-		LinkedList<Propiedad> propiedades = new LinkedList<>();
-		try {
-			stmt = DbConnector.getInstancia().getConn().createStatement();
-			rs = stmt.executeQuery(
-					  "SELECT * "
-					+ "FROM propiedades prop "
-					+ "INNER JOIN anunciantes anun "
-					+ "		ON prop.id_anunciante = anun.id_anunciante "
-					+ "LEFT JOIN precios pre "
-					+ "		ON prop.id_anunciante = pre.id_anunciante "
-					+ "		AND prop.nro_propiedad = pre.nro_propiedad "
-					+ "		AND pre.fecha_desde = ("
-					+ "			SELECT MAX(fecha_desde) "
-					+ "			FROM precios "
-					+ "			WHERE id_anunciante = prop.id_anunciante AND nro_propiedad = prop.nro_propiedad"
-					+ "		) "
-					+ "LEFT JOIN alquileres alq "
-					+ "		ON prop.id_anunciante = alq.id_anunciante "
-					+ "		AND prop.nro_propiedad = alq.nro_propiedad "
-					+ "		AND fecha_solicitado = ("
-					+ "			SELECT MAX(fecha_solicitado) "
-					+ "			FROM alquileres "
-					+ "			WHERE id_anunciante = prop.id_anunciante AND nro_propiedad = prop.nro_propiedad"
-					+ "		) "
-					+ "WHERE alq.id_alquiler IS NULL OR alq.estado != 'En curso' "
-					+ "ORDER BY prop.id_anunciante, prop.nro_propiedad");
-			if (rs != null) {
-				while (rs.next()) {
-					Propiedad p = new Propiedad();
-					
-					p.setNroPropiedad(rs.getInt("nro_propiedad"));
-
-					p.setAnunciante(new Anunciante());
-					p.getAnunciante().setIdAnunciante(rs.getInt("id_anunciante"));
-					p.getAnunciante().setNombre(rs.getString("nombre"));
-					p.getAnunciante().setEmail(rs.getString("email"));
-					p.getAnunciante().setTelefono(rs.getString("telefono"));
-					p.getAnunciante().setUsuario(rs.getString("usuario"));
-					p.getAnunciante().setContrasena(rs.getString("contrasena"));
-
-					p.setDireccion(rs.getString("direccion"));
-					p.setPiso(rs.getInt("piso"));
-					p.setDepto(rs.getString("depto"));
-					p.setPrecioActual(rs.getDouble("valor"));
-					p.setEstado(rs.getString("estado"));
-
-					propiedades.add(p);
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-				if (stmt != null) {
-					stmt.close();
-				}
-				DbConnector.getInstancia().releaseConn();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		return propiedades;
-	}
-
 	public LinkedList<Propiedad> getPropiedadesByAnunciante(Anunciante a) {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;

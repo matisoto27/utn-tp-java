@@ -22,6 +22,17 @@ public class PropiedadController {
 		return pd.getAll();
 	}
 	
+	public LinkedList<Propiedad> getPropiedadesDisponibles() {
+		LinkedList<Propiedad> todas = pd.getAll();
+		LinkedList<Propiedad> disponibles = new LinkedList<>();
+		for (Propiedad p : todas) {
+			if (p.getEstado() == null || !p.getEstado().equals("En curso")) {
+				disponibles.add(p);
+			}
+		}
+		return disponibles;
+	}
+	
 	public void update(Propiedad prop) {
 		pd.update(prop);
 	}
@@ -34,10 +45,6 @@ public class PropiedadController {
 		return pd.getByIdAnunNroProp(prop);
 	}
 	
-	public LinkedList<Propiedad> getPropiedadesDisponibles() {
-		return pd.getPropiedadesDisponibles();
-	}
-
 	public LinkedList<Propiedad> getPropiedadesByAnunciante(Anunciante anun) {
 		return pd.getPropiedadesByAnunciante(anun);
 	}

@@ -197,7 +197,9 @@ public class AlquilerData {
 					+ "			AND nro_propiedad = prop.nro_propiedad "
 					+ "			AND fecha_desde <= alq.fecha_solicitado"
 					+ "		) "
-					+ "WHERE alq.dni_cliente = ?");
+					+ "WHERE alq.dni_cliente = ? "
+					+ "ORDER BY alq.fecha_solicitado DESC "
+					+ "LIMIT 1");
 			stmt.setString(1, alq.getCliente().getDni());
 			rs = stmt.executeQuery();
 			if (rs != null && rs.next()) {
@@ -280,7 +282,9 @@ public class AlquilerData {
 					+ "			AND fecha_desde <= alq.fecha_solicitado"
 					+ "		) "
 					+ "WHERE alq.id_anunciante = ? "
-					+ "		AND alq.nro_propiedad = ?");
+					+ "		AND alq.nro_propiedad = ? "
+					+ "ORDER BY alq.fecha_solicitado DESC "
+					+ "LIMIT 1");
 			stmt.setInt(1, alq.getPropiedad().getAnunciante().getIdAnunciante());
 			stmt.setInt(2, alq.getPropiedad().getNroPropiedad());
 			rs = stmt.executeQuery();

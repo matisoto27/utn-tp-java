@@ -15,22 +15,42 @@
 </head>
 
 <body>
-    <div class="d-flex justify-content-center align-items-center vh-100">
-        <div class="d-flex justify-content-center align-items-center">
-            <div class="list-group text-center">
-                <a href="alquilerservlet?action=alquileresencursobyanunciante" class="list-group-item list-group-item-action mb-3">Alquileres pendientes o en curso</a>
-                <a href="alquilerservlet?action=alquilerescanceladosbyanunciante" class="list-group-item list-group-item-action mb-3">Alquileres cancelados</a>
-                <a href="alquilerservlet?action=alquileresfinalizadosbyanunciante" class="list-group-item list-group-item-action mb-3">Alquileres finalizados</a>
-                <a href="alquilerservlet?action=update" class="list-group-item list-group-item-action mb-3">Registrar contrato de alquiler</a>
-                <a href="propiedadservlet?action=create" class="list-group-item list-group-item-action mb-3">Registrar propiedad</a>
-                <a href="propiedadservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Ver mis propiedades</a>
-                <a href="precioservlet?action=create" class="list-group-item list-group-item-action mb-3">Registrar precio de una propiedad</a>
-                <a href="precioservlet?action=retrieve" class="list-group-item list-group-item-action mb-3">Ver histórico de precios</a>
-                <a href="anuncianteservlet?action=update" class="list-group-item list-group-item-action mb-3">Actualizar datos de mi cuenta</a>
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="row">
+            <div class="col-6 mb-3">
+                <a href="alquilerservlet?action=alquileresencursobyanunciante" class="btn-custom btn-color-1 w-100">Alquileres pendientes o en curso</a>
+            </div>
+            <div class="col-6 mb-3">
+                <a href="alquilerservlet?action=alquilerescanceladosbyanunciante" class="btn-custom btn-color-2 w-100">Alquileres cancelados</a>
+            </div>
+            <div class="col-6 mb-3">
+                <a href="alquilerservlet?action=alquileresfinalizadosbyanunciante" class="btn-custom btn-color-2 w-100">Alquileres finalizados</a>
+            </div>
+            <div class="col-6 mb-3">
+                <a href="alquilerservlet?action=update" class="btn-custom btn-color-1 w-100">Registrar contrato de alquiler</a>
+            </div>
+            <div class="col-6 mb-3">
+                <a href="propiedadservlet?action=create" class="btn-custom btn-color-1 w-100">Registrar propiedad</a>
+            </div>
+            <div class="col-6 mb-3">
+                <a href="propiedadservlet?action=retrieve" class="btn-custom btn-color-2 w-100">Ver mis propiedades</a>
+            </div>
+            <div class="col-6 mb-3">
+                <a href="precioservlet?action=create" class="btn-custom btn-color-2 w-100">Registrar precio de una propiedad</a>
+            </div>
+            <div class="col-6 mb-3">
+                <a href="precioservlet?action=retrieve" class="btn-custom btn-color-1 w-100">Ver histórico de precios</a>
+            </div>
+            <div class="col-6 mb-3">
+                <a href="anuncianteservlet?action=update" class="btn-custom btn-color-1 w-100">Actualizar datos de mi cuenta</a>
+            </div>
+            <div class="col-6 mb-3">
                 <form action="anuncianteservlet?action=delete" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu cuenta?')">
-                    <button type="submit" class="list-group-item list-group-item-action mb-3" id="eliminar-cuenta">Eliminar mi cuenta</button>
+                    <button type="submit" class="w-100" id="eliminar-cuenta">Eliminar mi cuenta</button>
                 </form>
-                <a href="logout" class="list-group-item list-group-item-action mb-3" id="cerrar-sesion">Cerrar sesión</a>
+            </div>
+            <div class="col-12 mb-3">
+                <a href="logout" class="btn-custom w-100" id="cerrar-sesion">Cerrar sesión</a>
             </div>
         </div>
     </div>

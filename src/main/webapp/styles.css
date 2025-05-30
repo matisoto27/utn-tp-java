@@ -44,6 +44,33 @@ body {
     background-color: #019875;
 }
 
+.btn-custom {
+    border-width: 1px;
+    border-radius: 10px;
+    padding: 20px;
+    transition: 0.3s;
+    color: white;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-color-1 {
+    background-color: #6C5CE7;
+}
+
+.btn-color-2 {
+    background-color: #00B894;
+}
+
+.btn-color-1:hover {
+    background-color: #574B90;
+}
+
+.btn-color-2:hover {
+    background-color: #019875;
+}
+
 #eliminar-cuenta {
     border-width: 1px;
     border-radius: 10px;
@@ -58,8 +85,8 @@ body {
 }
 
 #cerrar-sesion {
-    background-color: white;
     color: #2d3436;
+    background-color: white;
 }
 
 #cerrar-sesion:hover {
@@ -82,6 +109,11 @@ body {
 
 .table>thead {
     vertical-align: middle;
+}
+
+.table thead th {
+    background-color: #019875;
+    color: white;
 }
 
 .table>tbody {

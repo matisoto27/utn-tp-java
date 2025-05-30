@@ -28,7 +28,7 @@
     <div class="d-flex justify-content-center align-items-center min-vh-100">
         <div class="d-flex justify-content-center align-items-center form-container" style="width: 500px;">
             <form method="post" action="anuncianteservlet?action=update" style="width: 400px;">
-                <h2 class="text-center my-4">Actualizar mi perfil</h2>
+                <h2 class="text-center my-4">Actualizar mi cuenta</h2>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="nombre" class="form-label">Nombre</label>
